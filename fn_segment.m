@@ -8,6 +8,7 @@ function [ characters ] = fn_segment(eq, showFigs, figNum)
 %   figNum - The figure(#) to start at for displayed figures.
 %   Returns: A struct containing a matrix of each extracted character and
 %   the x/y location of the centroid of that character in the original img.
+%   Also returns the bounding box of the character [x,y,x_lenght,y_length]
 %
 %   Detailed Description: This function will extract individual
 %   characters/obects from the passed binary image. It assumes each
@@ -103,6 +104,8 @@ characters(size(loc,1)).centroid = [];
 %   boxes, can use the Convex Hulls to create masks around desired char
 for i = 1 : size(loc,1)
     characters(i).centroid = loc(i,:);
+    % Add Bounding Box Information to equations
+    characters(i).boundingbox = boundingboxes(i,:);
     
     % Check if more than 1 object in region, if so only extract largest
     %   Assume largest is like the sqrt, etc and the others will be
@@ -117,9 +120,9 @@ for i = 1 : size(loc,1)
        % region to 0
        region(:) = 1;
        region(objects.PixelIdxList{idx}) = 0;
-       characters(i).char = region;
+       characters(i).img = region;
     else
-        characters(i).char = eq(boundingboxes(i,2):boundingboxes(i,2)+boundingboxes(i,4),...
+        characters(i).img = eq(boundingboxes(i,2):boundingboxes(i,2)+boundingboxes(i,4),...
         boundingboxes(i,1):boundingboxes(i,1)+boundingboxes(i,3),:);
     end
 end
@@ -149,7 +152,7 @@ if showFigs
     figure(figNum + 1);
     for i =1:size(characters,2)
        subplot(2,ceil(size(characters,2)/2),i);
-       imshow(characters(i).char);
+       imshow(characters(i).img);
     end
 end
 
