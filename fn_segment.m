@@ -15,13 +15,16 @@ function [ characters ] = fn_segment(eq, showFigs, figNum)
 %   between each character of at least 1 pixel. Interioir contours and
 %   regions are ignored (e.g. the loops in a B are ignored so it is 1
 %   region).
-%   Currently it doesn't the edges of the character with the convex hull in
-%   case any characters overlap neigboring bounding boxes. In initial test
-%   images this isn't necessary, but the code is in here, just commented
-%   out to perform this.
+%   If there are multiple objects within a region when extracting mask it
+%   will only extract the largest (to handle things like square root where
+%   it overlaps multiple objects but it should be the largest.
 %   This function simply creates an edge map of the characters (same size
 %   as original) and then finds the centroid, convex hull, and bounding
 %   boxes which are then used for extraction.
+%
+%   Outstanding Issues: Misses the first characters inside the square root
+%   since it thinks they are inner regions to be ignore (like inner circles
+%   on a 'B'
 
 if nargin == 1
     showFigs = false;
@@ -89,19 +92,24 @@ characters(size(loc,1)).centroid = [];
 for i = 1 : size(loc,1)
     characters(i).centroid = loc(i,:);
     
-    % Create and apply Convex Hull mask before extraction
-    % To use, uncomment and comment out/delete the repeated
-    % characters(i)... line below
-%     x_ch = ch(i).ConvexHull(:,1);
-%     y_ch = ch(i).ConvexHull(:,2);
-%     eq_mask = ones(size(eq)) - eq;
-%     eq_mask = eq_mask .* poly2mask(x_ch, y_ch, size(eq,1), size(eq,2));
-%     eq_mask = ones(size(eq)) - eq_mask;
-%     characters(i).char = eq_mask(boundingboxes(i,2):boundingboxes(i,2)+boundingboxes(i,4),...
-%         boundingboxes(i,1):boundingboxes(i,1)+boundingboxes(i,3),:);
-    
-    characters(i).char = eq(boundingboxes(i,2):boundingboxes(i,2)+boundingboxes(i,4),...
+    % Check if more than 1 object in region, if so only extract largest
+    %   Assume largest is like the sqrt, etc and the others will be
+    %   extracted with other centroids
+    region = eq_inv(boundingboxes(i,2):boundingboxes(i,2)+boundingboxes(i,4),...
         boundingboxes(i,1):boundingboxes(i,1)+boundingboxes(i,3),:);
+    objects = bwconncomp(region);
+    if(size(objects.PixelIdxList,2) > 1)
+        numPixels = cellfun(@numel,objects.PixelIdxList);
+        [~,idx] = max(numPixels);
+       % Select largest object and set other values to 1 and largest object
+       % region to 0
+       region(:) = 1;
+       region(objects.PixelIdxList{idx}) = 0;
+       characters(i).char = region;
+    else
+        characters(i).char = eq(boundingboxes(i,2):boundingboxes(i,2)+boundingboxes(i,4),...
+        boundingboxes(i,1):boundingboxes(i,1)+boundingboxes(i,3),:);
+    end
 end
 
 %% Only show figures if boolean passed to show them
