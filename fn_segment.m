@@ -22,9 +22,9 @@ function [ characters ] = fn_segment(eq, showFigs, figNum)
 %   as original) and then finds the centroid, convex hull, and bounding
 %   boxes which are then used for extraction.
 %
-%   Outstanding Issues: Misses the first characters inside the square root
-%   since it thinks they are inner regions to be ignore (like inner circles
-%   on a 'B'
+%   TODO: Need to measure solidity of all regions over our test set to
+%   determine the threshold below which a region is not considered a
+%   character.
 
 if nargin == 1
     showFigs = false;
@@ -32,6 +32,10 @@ if nargin == 1
 elseif nargin == 2
     figNum = 1;
 end
+
+% Threshold for solidity of a region is a character or part of 1
+%   Should do a run over our entire test set to determine threshold
+th = .3;
 
 % Invert image
 eq_inv = ones(size(eq)) - eq;
@@ -49,6 +53,10 @@ bb = regionprops(eq_edges, 'BoundingBox');
 loc = cat(1, s.Centroid);
 % Matrix of boundingbox corner and sizes
 boundingboxes = cat(1, bb.BoundingBox);
+% Round to whole pixel values and ensure still contains character for
+%   character extraction purposes
+boundingboxes = floor(boundingboxes);
+boundingboxes(:,3:4) = boundingboxes(:,3:4) + 1;
 
 % Check if entire ConvexHull is inside another Convex Hull
 %  What to do with partially in? Ignore for now.
@@ -57,13 +65,22 @@ for i = 1:size(loc, 1)
     poly = cat(1, ch(i).ConvexHull);
     x = poly(:,1)';
     y = poly(:,2)';
+    % Check if i is inside any other region
     for j = 1:size(ch,1)
         poly = cat(1, ch(j).ConvexHull);
         x_ch = poly(:,1)';
         y_ch = poly(:,2)';
         if((sum(~inpolygon(x,y,x_ch,y_ch)) == 0) && i ~= j)
-            % Mark index to remove
-            idx = [idx i];
+            % If inside another convex hull check to see if it contains
+            % mostly character pixels (0) or background (1). If character, 
+            % keep, otherwise discard
+            region = eq_inv(boundingboxes(i,2):boundingboxes(i,2)+boundingboxes(i,4),...
+                boundingboxes(i,1):boundingboxes(i,1)+boundingboxes(i,3),:);
+            sol = regionprops(region,'solidity');
+            if(sol.Solidity < th)
+                % Mark index to remove
+                idx = [idx i];
+            end
         end
     end
 end
@@ -77,11 +94,6 @@ if(~isempty(idx))
         boundingboxes(idx(i),:)=[];
     end
 end
-
-% Round to whole pixel values and ensure still contains character for
-%   character extraction purposes
-boundingboxes = floor(boundingboxes);
-boundingboxes(:,3:4) = boundingboxes(:,3:4) + 1;
 
 % Init struct to contain extracted characters and their x/y locations
 characters(size(loc,1)).centroid = [];
