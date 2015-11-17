@@ -61,21 +61,22 @@ for i = 1:k
     % Create circle line of logical 1s to extract template
     C = xor(sqrt((c-cent_x).^2+(r-cent_y).^2)<=rad, ...
         sqrt((c-cent_x).^2+(r-cent_y).^2)<=(rad-1));
-    % Extract circular template linear indices (do top and bottom separate 
-    % because of how linear indices work)
-    C1 = C(1:round(cent_y),:);
-    C2 = C(round(cent_y)+1:end,:);
-    idx1 = find(C1);
-    idx2 = find(C2);
-    temp1 = char(1:round(cent_y),:);
-    temp2 = char(round(cent_y)+1:end,:);
-    % Extract vector of elements on circle. Start at180deg, CW
-    circVec = [temp1(idx1) ; flipud(temp2(idx2))];
+    % Extract circular template linear indices (sort based on theta)
+    cidx = find(C);
+    % Create matrix linear indices, correspondingn x and y values
+    vals = [cidx c(cidx)-cent_x r(cidx)-cent_y zeros(size(cidx,1),1)];
+    % Add corresponding teheta values
+    [TH, ~] = cart2pol(vals(:,2), vals(:,3));
+    vals(:,4) = TH;
+    % Sort based on theta values so in order around circle
+    [~, order] = sort(vals(:,4));
+    sortedvals = vals(order,:);
+    % Use linear indices to extract desired values in correct theta order
+    circVec = char(sortedvals(:,1));
     
     % Show circles overlaid on character
     if(showFigs)
-        idx = find(C);
-        tempcirc(idx) = .5;
+        tempcirc(C) = .5;
     end
     
     % Extract values from character based on circular indices
@@ -88,7 +89,7 @@ for i = 1:k
     
     % Count number of sections of at least 2 0s. This is the number of
     % character sections the circle goes through.
-    cnt = strfind(circVec',[0 0]);
+    cnt = strfind([1 1 circVec'],[0 0]);
     coding(i).count = length(cnt(diff([1 cnt])~=1));
     identifier(1+i) = coding(i).count;
     % Handle wrap around of vector since it is a circle
