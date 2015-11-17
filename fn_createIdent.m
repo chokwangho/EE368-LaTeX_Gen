@@ -79,9 +79,9 @@ for i = 1:k
         tempcirc(C) = .5;
     end
     
-    % Extract values from character based on circular indices
-    
-    % Need to do closing of gaps? Initially seems better without
+    % Extract values from character based on circular indices. Start at
+    % 0deg going CCW.
+        % Need to do closing of gaps? Initially seems better without
 %     circVec = ones(size(circVec))-imclose(ones(size(circVec))-circVec,ones(2,1));
     
     % Save vector for debugging or future use
@@ -92,7 +92,8 @@ for i = 1:k
     cnt = strfind([1 1 circVec'],[0 0]);
     coding(i).count = length(cnt(diff([1 cnt])~=1));
     identifier(1+i) = coding(i).count;
-    % Handle wrap around of vector since it is a circle
+    % Handle wrap around of vector since it is a circle (or wrap 0s around
+    % to begining like 1s below?)
     if(circVec(1) == 0 && circVec(end) == 0)
         coding(i).count = coding(i).count - 1;
     end
@@ -121,7 +122,7 @@ for i = 1:k
         bgrd_len(idx_d2)=NaN;
         d1 = max(bgrd_len);
     end
-    % Gind ratio of difference of two longest arcs by circumference
+    % Find ratio of difference of two longest arcs by circumference
     coding(i).ratio = (d2-d1) / circ;
     if(i > 1) % Only keep k-1 largest ratios
         identifier(k+i) = coding(i).ratio;
