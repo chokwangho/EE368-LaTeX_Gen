@@ -23,9 +23,11 @@ function [ characters ] = fn_segment(eq, showFigs, figNum)
 %   as original) and then finds the centroid, convex hull, and bounding
 %   boxes which are then used for extraction.
 %
-%   TODO: Need to measure solidity of all regions over our test set to
-%   determine the threshold below which a region is not considered a
-%   character.
+%   Limitations: This will only extract characters as one character if they
+%   are contiguous. Non-contiguous pieces will be extracted separately,
+%   e.g. "=" will be two "-". Also Characters with intentially
+%   non-contiguous interior portions ignore e.g. certain styles of capital
+%   Theta
 
 if nargin == 1
     showFigs = false;
@@ -50,6 +52,7 @@ eq_edges = xor(exp, eq_inv);
 s = regionprops(eq_edges, 'Centroid');
 ch = regionprops(eq_edges, 'ConvexHull');
 bb = regionprops(eq_edges, 'BoundingBox');
+imgs = regionprops(eq_edges, 'Image');
 % Matrix of centroid locations
 loc = cat(1, s.Centroid);
 % Matrix of boundingbox corner and sizes
@@ -72,14 +75,34 @@ for i = 1:size(loc, 1)
         x_ch = poly(:,1)';
         y_ch = poly(:,2)';
         if((sum(~inpolygon(x,y,x_ch,y_ch)) == 0) && i ~= j)
-            % If inside another convex hull check to see if it contains
-            % mostly character pixels (0) or background (1). If character, 
-            % keep, otherwise discard
-            region = eq_inv(boundingboxes(i,2):boundingboxes(i,2)+boundingboxes(i,4),...
-                boundingboxes(i,1):boundingboxes(i,1)+boundingboxes(i,3),:);
-            sol = regionprops(region,'solidity');
-            if(sol.Solidity < th)
-                % Mark index to remove
+            % If inside another convex hull, check to see if it is
+            % completely surrounded by the pixels (1) of the character or
+            % if there are gaps in the character in the convex hull
+            BB_outer = boundingboxes(j,:);
+            BB_inner = boundingboxes(i,:);
+            % Adjust to BB_outer frame of reference
+            BB_inner(1) = BB_inner(1) - BB_outer(1);
+            BB_inner(2) = BB_inner(2) - BB_outer(2);
+
+            outer = imgs(j).Image;
+            % Shift cent so center of outer
+            cent_x = round(loc(i,1) - boundingboxes(j,1));
+            cent_y = round(loc(i,2) - boundingboxes(j,2));
+            % Project in all 4 directions to determine if fully bounded
+            up = sum(outer(1:BB_inner(2)+BB_inner(4), ...
+                BB_inner(1):(BB_inner(1)+BB_inner(3))),1);
+            down = sum(outer(BB_inner(2):end,...
+                BB_inner(1):(BB_inner(1)+BB_inner(3))),1);
+            left = sum(outer(BB_inner(2):(BB_inner(2)+BB_inner(4)),...
+                1:BB_inner(1)+BB_inner(3)),2);
+            right = sum(outer(BB_inner(2):(BB_inner(2)+BB_inner(4)),...
+                BB_inner(1):end),2);
+            
+            % Determine if any 0s in the summed directions, if so, then
+            % keep the inner contour, if not, discard it.
+            if((sum(up(:)==0) + sum(down(:)==0) + sum(left(:)==0)...
+                    + sum(right(:)==0)) == 0)
+                % Fully enclosed, no '0' values in any direction, remove
                 idx = [idx i];
             end
         end
@@ -87,12 +110,13 @@ for i = 1:size(loc, 1)
 end
 % Remove duplicates
 idx = unique(idx);
-% Remove found interior points
+%Remove found interior points
 if(~isempty(idx))
     for i = size(idx,2):-1:1
         loc(idx(i),:)=[];
         ch(idx(i))=[];
         boundingboxes(idx(i),:)=[];
+        imgs(idx(i))=[];
     end
 end
 
