@@ -1,6 +1,6 @@
+% Project - Character Recogition. Create Rotational Profile Development
 % Jim Brewer
 % EE368
-% Project - Character Recogition. Create Rotational Profile Development
 % Nov 13, 2015
 
 % Read in equation to get character to test feature extraction
