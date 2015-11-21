@@ -3,6 +3,8 @@ function [ identifier ] = fn_createIdent(char, printIdent, showFigs)
 % of inertia, the number of chracter crossings for each concentric circle,
 % and the 2 largest arc length ratio for k-1 largest concentric circles.
 %   
+%   char - Binary image of character to create identifier for. Assumes
+%   character is black.
 %   printIdent = Prints out cetnral moment, counts and ratio identifier
 %   showFigs - Set to true to show extracted circles and figure with
 %   circles overlaid.
@@ -20,7 +22,10 @@ elseif nargin == 2
 end
 % Parameterss
 k = 8;
-identifier = zeros(1,2*k);
+% IN2, R1-R7, D2-D8, 7 Hu Moments
+identifier = zeros(1,2*k+6);
+
+char_inv = ones(size(char)) - char;
 
 % Total number of pixels in character
 N = sum(~char(:));
@@ -28,7 +33,7 @@ N = sum(~char(:));
 [y, x] = find(~char);
 
 % Find centroid
-cent = regionprops(char,'centroid');
+cent = regionprops(char_inv,'centroid');
 cent = cat(1, cent.Centroid);
 cent_x = cent(1);
 cent_y = cent(2);
@@ -141,6 +146,12 @@ for i = 1:k
         end
     end
 end
+
+% Add Hu Moments to end of Identifier (work on inverse so char is 0)
+eta_mat = SI_Moment(char_inv) ;
+hu_arr = Hu_Moments(eta_mat);
+% 1st moment is IN2, above, in first slot
+identifier(2*k+1:end) = hu_arr(2:end);
 
 % Show character with circles overlaid
 if(showFigs)

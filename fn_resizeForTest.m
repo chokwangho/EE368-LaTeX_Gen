@@ -7,7 +7,7 @@ function [ ident ] = fn_resizeForTest(img, num, minScale, maxScale )
 
 
 dS = (maxScale - minScale) / (num-1);
-ident = zeros(num,16); %***Width manually set from current fn_createIdent.m
+ident = zeros(num,22); %***Width manually set from current fn_createIdent.m
 for i = 1:num
     scale = dS * i;
     img_scl = imresize(img, scale);

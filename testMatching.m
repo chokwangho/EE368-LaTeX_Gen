@@ -21,6 +21,7 @@ for i = 1:length(chars)
     X_orig(i,1:length(chars(1).ident)) = chars(i).ident;
     X_orig(i,end) = i;
 end
+% save('red_charPalette_Classifier.mat','X_orig');
 % Results So Far: 68-70% Recognition with scaled iamges
 
 %% Train Nearest Neighbor with Scaled Images
@@ -95,6 +96,32 @@ fprintf('\nTotal Correct:\t\t%.0f \t %.1f%%\n',correct,(correct/total)*100);
 % Percent Correct for Scale 0.75: 98.3
 % Percent Correct for Scale 1.00: 100.0
 % Percent Correct for Scale 1.25: 95.8
+% 
+% With Inverted characters for ident centroid
+% Resized Test Images (5) with KNNSEARCH:
+% # of Templates:119
+% # of Test Images:595
+% 
+% Correct for Scale 0.25: 80 	 67.2%
+% Correct for Scale 0.50: 109 	 91.6%
+% Correct for Scale 0.75: 115 	 96.6%
+% Correct for Scale 1.00: 119 	 100.0%
+% Correct for Scale 1.25: 111 	 93.3%
+% 
+% Total Correct:		534 	 89.7%
+%
+% With Hu Moments as part of Ident
+% Resized Test Images (5) with KNNSEARCH:
+% # of Templates:119
+% # of Test Images:595
+% 
+% Correct for Scale 0.25: 84 	 70.6%
+% Correct for Scale 0.50: 112 	 94.1%
+% Correct for Scale 0.75: 116 	 97.5%
+% Correct for Scale 1.00: 119 	 100.0%
+% Correct for Scale 1.25: 112 	 94.1%
+% 
+% Total Correct:		543 	 91.3%
 
 %% Show which characters are being mismatched with which
 
@@ -112,7 +139,7 @@ end
 
 %% Test with input equation
 dir = strcat(pwd,'/LaTeX Equations');
-eq = im2double(rgb2gray(imread(strcat(dir,'/eq9_hr.jpg'))));
+eq = im2double(rgb2gray(imread(strcat(dir,'/eq10_hr.jpg'))));
 
 th = graythresh(eq);
 eq_bin = eq;
@@ -130,7 +157,8 @@ for i = 1:length(eq_chars)
     imshow(eq_chars(i).img);
     title('Input');
     
-    idx_matched = knnsearch(X_orig(:,1:length(chars(1).ident)),eq_chars(i).ident);
+    idx_matched = knnsearch(X_orig(:,1:length(chars(1).ident)),...
+        eq_chars(i).ident,'distance','cityblock');
     subplot(2,length(eq_chars),i+length(eq_chars));
     imshow(chars(X_orig(idx_matched,end)).img);
     str = sprintf('Matched %d',X_orig(idx_matched,end));
