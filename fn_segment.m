@@ -175,8 +175,10 @@ if showFigs
     % Show all extracted characters
     figure(figNum + 1);
     for i =1:size(characters,2)
-       subplot(2,ceil(size(characters,2)/2),i);
+        dim = ceil(sqrt(size(characters,2)));
+       subplot(dim, dim,i);
        imshow(characters(i).img);
+       title(sprintf('%d',i));
     end
 end
 
