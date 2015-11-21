@@ -44,7 +44,7 @@ end
 % Extract Circular Topology Template and Diameter Ratio
 y = size(char,1);
 x = size(char,2);
-dr = max(x - cent_x, y - cent_y) / k;
+dr = max(x - cent_x, y - cent_y) / (k+1);
 [c, r] = meshgrid(1:x, 1:y);
 
 % Display Extracted circles
@@ -87,48 +87,59 @@ for i = 1:k
     % Save vector for debugging or future use
     coding(i).circ = circVec;
     
-    % Count number of sections of at least 2 0s. This is the number of
-    % character sections the circle goes through.
-    cnt = strfind([1 1 circVec'],[0 0]);
-    coding(i).count = length(cnt(diff([1 cnt])~=1));
-    identifier(1+i) = coding(i).count;
-    % Handle wrap around of vector since it is a circle (or wrap 0s around
-    % to begining like 1s below?)
-    if(circVec(1) == 0 && circVec(end) == 0)
-        coding(i).count = coding(i).count - 1;
+    % If character is so small nothing is extracted, leave ident as 0
+    if(~isempty(circVec))
+        % Count number of sections of at least 2 0s. This is the number of
+        % character sections the circle goes through.
+        cnt = strfind([1 1 circVec'],[0 0]);
+        coding(i).count = length(cnt(diff([1 cnt])~=1));
+        % Handle wrap around of vector since it is a circle (or wrap 0s around
+        % to begining like 1s below?)
+        %TODO: For some reason detection precentages are slightly better
+        % without this
+%         if(circVec(1) == 0 && circVec(end) == 0)
+%             coding(i).count = coding(i).count - 1;
+%         end
+        identifier(1+i) = coding(i).count;
+        if(showFigs)
+            subplot(2,4,i);
+            imshow(coding(i).circ);
+            str = sprintf('%d',coding(i).count);
+            title(str);
+        end
+
+        % Find 2 longest arcs of background and divide diff by total length
+        % If 1s (background) wrap around, move all 1s to one side.
+        circ = length(circVec);
+        if(circVec(1) == 1 && circVec(end) == 1)
+            idx = find(circVec==0,1,'last');
+            circVec = [circVec(idx+1:end); circVec(1:idx)];
+        end
+        % Vector of length of each section of 1s
+        B = [0 circVec' 0]; % Pad with 0s for diff
+        bgrd_len = find(diff(B)==-1) - find(diff(B)==1);
+        % If no crossings, set ratio to 0
+        if(coding(i).count < 1);
+            d2 = 0;
+            d1 = 0;
+        else
+            % Get two longest sections (arcs)
+            [d2, idx_d2] = max(bgrd_len);
+            bgrd_len(idx_d2)=NaN;
+            d1 = max(bgrd_len);
+        end
+        % Find ratio of difference of two longest arcs by circumference
+        coding(i).ratio = (d2-d1) / circ;
+        if(i > 1) % Only keep k-1 largest ratios
+            if(~isnan(coding(i).ratio))
+                identifier(k+i) = coding(i).ratio;
+            end
+        end
+        if(printIdent)
+            fprintf('Count=%d, d2=%d, d1=%d, c=%d, ratio = %.4f\n',...
+                coding(i).count,d2,d1,circ,coding(i).ratio);
+        end
     end
-    subplot(2,4,i);
-    imshow(coding(i).circ);
-    str = sprintf('%d',coding(i).count);
-    title(str);
-    
-    % Find 2 longest arcs of background and divide diff by total length
-    % If 1s (background) wrap around, move all 1s to one side.
-    circ = length(circVec);
-    if(circVec(1) == 1 && circVec(end) == 1)
-        idx = find(circVec==0,1,'last');
-        circVec = [circVec(idx+1:end); circVec(1:idx)];
-    end
-    % Vector of length of each section of 1s
-    B = [0 circVec' 0]; % Pad with 0s for diff
-    bgrd_len = find(diff(B)==-1) - find(diff(B)==1);
-    % If no crossings, set ratio to 0
-    if(coding(i).count < 1);
-        d2 = 0;
-        d1 = 0;
-    else
-        % Get two longest sections (arcs)
-        [d2, idx_d2] = max(bgrd_len);
-        bgrd_len(idx_d2)=NaN;
-        d1 = max(bgrd_len);
-    end
-    % Find ratio of difference of two longest arcs by circumference
-    coding(i).ratio = (d2-d1) / circ;
-    if(i > 1) % Only keep k-1 largest ratios
-        identifier(k+i) = coding(i).ratio;
-    end
-    fprintf('Count=%d, d2=%d, d1=%d, c=%d, ratio = %.4f\n',...
-        coding(i).count,d2,d1,circ,coding(i).ratio);
 end
 
 % Show character with circles overlaid
