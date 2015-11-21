@@ -9,7 +9,7 @@ load('red_charPalette.mat');
 %% Create identifiers for each character
 for i = 1:length(chars)
     chars(i).ident = fn_createIdent(chars(i).img);
-    % 0 out count for how many times that character is a false positive
+    % 0 out count fo    r how many times that character is a false positive
     chars(i).wrong = 0;
     chars(i).match = [];
 end
@@ -52,10 +52,13 @@ end
 %% Find percentage correct with resized test images over entire palette
 correct = 0;
 total = 0;
-numResize = 5;
+numResize = 4;
+maxScale = 1.25;
+minScale = .5;
 scaleMatches = zeros(1,numResize);
 for j = 1:length(chars)
-    ident_testing = fn_resizeForTest(chars(j).img, numResize, .25, 1.25);
+    ident_testing = fn_resizeForTest(chars(j).img, numResize, minScale, ...
+        maxScale);
 %     ident_testing = chars(j).ident;
     for i = 1:size(ident_testing,1)
        idx_hat = knnsearch(X_orig(:,1:length(chars(1).ident)),...
@@ -79,7 +82,8 @@ fprintf('# of Templates:%d\n',length(chars));
 fprintf('# of Test Images:%d\n\n',total);
 for i = 1:numResize
    fprintf('Correct for Scale %.2f: %.0f \t %.1f%%\n',...
-        ((1.25-.25)/(numResize-1))*i, scaleMatches(i), (scaleMatches(i)/length(chars))*100);
+        ((maxScale - minScale) / (numResize-1)) * (i-1) + minScale,...
+        scaleMatches(i), (scaleMatches(i)/length(chars))*100);
 end
 fprintf('\nTotal Correct:\t\t%.0f \t %.1f%%\n',correct,(correct/total)*100);
 
@@ -115,19 +119,35 @@ fprintf('\nTotal Correct:\t\t%.0f \t %.1f%%\n',correct,(correct/total)*100);
 % # of Templates:119
 % # of Test Images:595
 % 
+% Resized Test Images (5) with KNNSEARCH:
+% # of Templates:119
+% # of Test Images:595
+% 
 % Correct for Scale 0.25: 84 	 70.6%
-% Correct for Scale 0.50: 112 	 94.1%
+% Correct for Scale 0.50: 111 	 93.3%
 % Correct for Scale 0.75: 116 	 97.5%
 % Correct for Scale 1.00: 119 	 100.0%
-% Correct for Scale 1.25: 112 	 94.1%
+% Correct for Scale 1.25: 111 	 93.3%
 % 
-% Total Correct:		543 	 91.3%
+% Total Correct:		541 	 90.9%
+%
+% Less Scaling:
+% Resized Test Images (4) with KNNSEARCH:
+% # of Templates:119
+% # of Test Images:476
+% 
+% Correct for Scale 0.50: 111 	 93.3%
+% Correct for Scale 0.75: 116 	 97.5%
+% Correct for Scale 1.00: 119 	 100.0%
+% Correct for Scale 1.25: 111 	 93.3%
+% 
+% Total Correct:		457 	 96.0%
 
 %% Show which characters are being mismatched with which
 
 matches = [(1:length(chars))' cat(1,chars.match)];
-matches_bool = matches(:,2:end) ~= repmat(matches(:,1),1,5);
-scl = 5; %Pick a scale number (1 to numResize above)
+matches_bool = matches(:,2:end) ~= repmat(matches(:,1),1,numResize);
+scl = 4; %Pick a scale number (1 to numResize above)
 [row, col] = find(matches_bool(:,scl));
 figure(1);
 for i = 1:length(row)
@@ -139,7 +159,7 @@ end
 
 %% Test with input equation
 dir = strcat(pwd,'/LaTeX Equations');
-eq = im2double(rgb2gray(imread(strcat(dir,'/eq10_hr.jpg'))));
+eq = im2double(rgb2gray(imread(strcat(dir,'/eq9_hr.jpg'))));
 
 th = graythresh(eq);
 eq_bin = eq;

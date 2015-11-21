@@ -9,7 +9,7 @@ function [ ident ] = fn_resizeForTest(img, num, minScale, maxScale )
 dS = (maxScale - minScale) / (num-1);
 ident = zeros(num,22); %***Width manually set from current fn_createIdent.m
 for i = 1:num
-    scale = dS * i;
+    scale = dS * (i-1) + minScale;
     img_scl = imresize(img, scale);
     % Threshold to binary again
     th = graythresh(img_scl);
