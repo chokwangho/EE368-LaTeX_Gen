@@ -11,7 +11,6 @@ for i = 1:length(chars)
     chars(i).ident = fn_createIdent(chars(i).img);
     % 0 out count fo    r how many times that character is a false positive
     chars(i).wrong = 0;
-    chars(i).match = [];
 end
 
 %% Train Nearest Neighbor Classifier
@@ -59,7 +58,7 @@ scaleMatches = zeros(1,numResize);
 for j = 1:length(chars)
     ident_testing = fn_resizeForTest(chars(j).img, numResize, minScale, ...
         maxScale);
-%     ident_testing = chars(j).ident;
+    chars(j).match = [];
     for i = 1:size(ident_testing,1)
        idx_hat = knnsearch(X_orig(:,1:length(chars(1).ident)),...
            ident_testing(i,:),'distance','cityblock');
@@ -159,7 +158,7 @@ end
 
 %% Test with input equation
 dir = strcat(pwd,'/LaTeX Equations');
-eq = im2double(rgb2gray(imread(strcat(dir,'/eq9_hr.jpg'))));
+eq = im2double(rgb2gray(imread(strcat(dir,'/eq8_hr.jpg'))));
 
 th = graythresh(eq);
 eq_bin = eq;
