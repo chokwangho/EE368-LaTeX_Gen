@@ -5,32 +5,12 @@ function eq_string = fn_assemble_eq( EqStruct )
 %   function. The struct will contain the following fields:
 %       centroid - The centroid of the
 
-% Create Greek letter recognition table
-greeks = {
-    'alpha'
-    'beta'
-    'gamma'
-    'delta'
-    'epsilon'
-    'zeta'
-    'eta'
-    'theta'
-    'iota'
-    'kappa'
-    'lambda'
-    'mu'
-    'nu'
-    'xi'
-    'pi'
-    'rho'
-    'sigma'
-    'tau'
-    'upsilon'
-    'phi'
-    'chi'
-    'psi'
-    'omega'
-    };
+% Create control sequence recognition table
+control = help_create_control;
+
+% Set white space threshold in pixels for letters
+space = 10;
+
 eq_string = '';
 chars = EqStruct.characters;
 num_chars = length(chars);
@@ -66,24 +46,107 @@ while i <= num_chars
     switch num_overlaps
         case 0
             % Normal op
-            if any(strcmp(detected,greeks))
+            if any(strcmp(detected,control))
                 detected = ['\' detected ' '];
+            end
+            
+            % Insert space if needed between letters
+            if i+1 <= num_chars && help_is_letter(detected) && help_is_letter(chars(i+1).char)
+                dist_to_next = boxes(1,i+1)-ur_coord;
+                if dist_to_next >= space
+                    detected = [detected ' '];
+                end
             end
             eq_string = [eq_string detected];
         case 1
             % Make sure the overlap is the next char
             assert(overlap_idx(i+1))
-            overlap_char = chars(i+1).char;
-            % Manually check for cases
-            if strcmp(detected,'-') && strcmp(overlap_char,'-')
-                eq_string = [eq_string '='];                
+            % Check if overlap is trivial
+            overlap_ul = boxes(1,i+1);
+            if abs(overlap_ul-ur_coord) <= 1
+                % Normal op
+                if any(strcmp(detected,control))
+                    detected = ['\' detected ' '];
+                end
+                
+                % Insert space if appropriate
+                if i+1 <= num_chars && help_is_letter(detected) && help_is_letter(chars(i+1).char)
+                    dist_to_next = boxes(1,i+1)-ur_coord;
+                    if dist_to_next >= space
+                        detected = [detected ' '];
+                    end
+                end
+                eq_string = [eq_string detected];
+            else
+                
+                overlap_char = chars(i+1).char;
+                % Manually check for cases
+                if strcmp(detected,'-') && strcmp(overlap_char,'-')
+                    eq_string = [eq_string '='];
+                end
+                i = i+1; % Skip next char
             end
-            i = i+1; % Skip next char
             
     end
     i = i+1;
 end
 
 
+end
+
+function control = help_create_control()
+control = {
+    'alpha'
+    'beta'
+    'gamma'
+    'delta'
+    'epsilon'
+    'zeta'
+    'eta'
+    'theta'
+    'iota'
+    'kappa'
+    'lambda'
+    'mu'
+    'nu'
+    'xi'
+    'pi'
+    'rho'
+    'sigma'
+    'tau'
+    'upsilon'
+    'phi'
+    'chi'
+    'psi'
+    'omega'
+    
+    'Alpha'
+    'Beta'
+    'Gamma'
+    'Delta'
+    'Epsilon'
+    'Zeta'
+    'Eta'
+    'Theta'
+    'Iota'
+    'Kappa'
+    'Lambda'
+    'Mu'
+    'Nu'
+    'Xi'
+    'Pi'
+    'Rho'
+    'Sigma'
+    'Tau'
+    'Upsilon'
+    'Phi'
+    'Psi'
+    'Omega'
+    'int'
+    };
+end
+
+function out =  help_is_letter(str)
+    out = length(str)==1 && isstrprop(str,'alpha');
 end
 
