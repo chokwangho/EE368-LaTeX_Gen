@@ -86,7 +86,39 @@ while i <= num_chars
                 end
                 i = i+1; % Skip next char
             end
-            
+        otherwise
+            % Grab the overlapped characters
+            overlap_idx(i) = true;
+            overlap_chars = chars(overlap_idx);
+            % If just one '-', then it is a fraction
+            if sum(strcmp('-',{overlap_chars.char}))==1
+                % Find the bard
+                if strcmp(detected,'-')
+                    % Easy case when we already have the bar
+                    frac_height = chars(i).centroid(2);
+                    numer_idx = false(1,length(overlap_chars));
+                    denom_idx = numer_idx;
+                    for frac_idx = 1:length(overlap_chars)
+                        if ~strcmp(overlap_chars(frac_idx).char,'-')
+                            if overlap_chars(frac_idx).centroid(2) < frac_height
+                                numer_idx(frac_idx) = true;
+                            elseif overlap_chars(frac_idx).centroid(2) > frac_height
+                                denom_idx(frac_idx) = true;
+                            end
+                        end
+                    end
+                    numer_eq_struct.filename = '';
+                    numer_eq_struct.characters = overlap_chars(numer_idx);
+                    denom_eq_struct.filename = '';
+                    denom_eq_struct.characters = overlap_chars(denom_idx);
+                    
+                    numer_str = fn_assemble_eq(numer_eq_struct);
+                    denom_str = fn_assemble_eq(denom_eq_struct);
+                    
+                    detected = ['\frac_{' denom_str '}^{' numer_str '}'];
+                end
+            end
+            eq_string = [eq_string detected];
     end
     i = i+1;
 end
