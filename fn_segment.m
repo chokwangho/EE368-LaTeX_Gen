@@ -160,8 +160,12 @@ for i = 1 : size(loc,1)
             'solidity');
     % If meets criteria for squareroot, crop image
     if(ratio > th_ratio && sol.Solidity < th_sol)
-        new_w = boundingboxes(i,4) * sqrt_ratio;
+        new_w = round(boundingboxes(i,4) * sqrt_ratio);
         characters(i).img = characters(i).img(:,1:new_w);
+        % Trim top part of squareroot off
+        idx = find(~characters(i).img(:,end));
+        last = idx(end);
+        characters(i).img = characters(i).img(last+1:end,:);
     end
 end
 

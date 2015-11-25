@@ -9,7 +9,7 @@ load('red_charPalette.mat');
 %% Create identifiers for each character
 for i = 1:length(chars)
     chars(i).ident = fn_createIdent(chars(i).img);
-    % 0 out count fo    r how many times that character is a false positive
+    % 0 out count for how many times that character is a false positive
     chars(i).wrong = 0;
 end
 
@@ -141,6 +141,32 @@ fprintf('\nTotal Correct:\t\t%.0f \t %.1f%%\n',correct,(correct/total)*100);
 % Correct for Scale 1.25: 111 	 93.3%
 % 
 % Total Correct:		457 	 96.0%
+%
+% Added closing to circular vectors
+% Resized Test Images (4) with KNNSEARCH:
+% # of Templates:118
+% # of Test Images:472
+% 
+% Correct for Scale 0.50: 114 	 96.6%
+% Correct for Scale 0.75: 116 	 98.3%
+% Correct for Scale 1.00: 118 	 100.0%
+% Correct for Scale 1.25: 113 	 95.8%
+% 
+% Total Correct:		461 	 97.7%
+% 
+% With circle counts normalized to hu moments mean (better here, worse on
+% test equations)
+% Resized Test Images (5) with KNNSEARCH:
+% # of Templates:118
+% # of Test Images:590
+% 
+% Correct for Scale 0.25: 107 	 90.7%
+% Correct for Scale 0.50: 115 	 97.5%
+% Correct for Scale 0.75: 117 	 99.2%
+% Correct for Scale 1.00: 118 	 100.0%
+% Correct for Scale 1.25: 117 	 99.2%
+% 
+% Total Correct:		574 	 97.3%
 
 %% Show which characters are being mismatched with which
 
