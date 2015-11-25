@@ -149,6 +149,20 @@ for i = 1 : size(loc,1)
         characters(i).img = eq(boundingboxes(i,2):boundingboxes(i,2)+boundingboxes(i,4),...
         boundingboxes(i,1):boundingboxes(i,1)+boundingboxes(i,3),:);
     end
+    
+    % Special Case for Squareroot. If "long" based on ratio threshold and
+    % has a low solidity (so isn't - or ~) then treat as square root
+    th_ratio = 1; % Threshold for ratio of wdith to height. 
+    th_sol = .2;
+    sqrt_ratio = 0.7812; % Determined from squareroot template
+    ratio = boundingboxes(i,3) / boundingboxes(i,4);
+    sol = regionprops(ones(size(characters(i).img))-characters(i).img,...
+            'solidity');
+    % If meets criteria for squareroot, crop image
+    if(ratio > th_ratio && sol.Solidity < th_sol)
+        new_w = boundingboxes(i,4) * sqrt_ratio;
+        characters(i).img = characters(i).img(:,1:new_w);
+    end
 end
 
 %% Only show figures if boolean passed to show them

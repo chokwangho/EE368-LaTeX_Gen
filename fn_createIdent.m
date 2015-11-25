@@ -86,8 +86,8 @@ for i = 1:k
     
     % Extract values from character based on circular indices. Start at
     % 0deg going CCW.
-        % Need to do closing of gaps? Initially seems better without
-%     circVec = ones(size(circVec))-imclose(ones(size(circVec))-circVec,ones(2,1));
+    % Need to do closing of gaps? Initially seems better without
+    circVec = ones(size(circVec))-imclose(ones(size(circVec))-circVec,ones(2,1));
     
     % Save vector for debugging or future use
     coding(i).circ = circVec;
