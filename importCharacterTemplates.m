@@ -4,6 +4,9 @@
 % EE368
 % Nov 18, 2015
 
+% Helper Script to create the MatLab data of the character templates and
+% their character string and identifier data. Output used by "main.m"
+
 dir = strcat(pwd,'/LaTeX Equations');
 palette = im2double(rgb2gray(imread(strcat(dir,'/reduced_characterPalette.jpg'))));
 

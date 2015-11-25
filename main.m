@@ -2,6 +2,11 @@
 % EE368 - Aut 15 - Project
 % Nov 20, 2015
 % 
+% Main file to execute the detection and LaTeX code generation and output.
+% To run, set the directory and file name under "dir" and "eq" and ensure
+% the template character and identity *.mat files are available, then run
+% the entire script.
+
 clear all;
 close all;
 
@@ -12,7 +17,7 @@ load('red_charPalette_Classifier.mat');
 
 %% Read in desired equation and convert to double grayscale
 dir = strcat(pwd,'/LaTeX Equations');
-eq = im2double(rgb2gray(imread(strcat(dir,'/eq10-2_hr.jpg'))));
+eq = im2double(rgb2gray(imread(strcat(dir,'/eq1_hr.jpg'))));
 
 %% Optimize page and binarize
 

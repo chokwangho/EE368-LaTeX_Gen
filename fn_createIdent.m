@@ -2,6 +2,7 @@ function [ identifier ] = fn_createIdent(char, printIdent, showFigs)
 %createIdent - Create the identifier vector with normalized central moment
 % of inertia, the number of chracter crossings for each concentric circle,
 % and the 2 largest arc length ratio for k-1 largest concentric circles.
+% Also uses the other 6 Hu moments as part of the identifier.
 %   
 %   char - Binary image of character to create identifier for. Assumes
 %   character is black.
