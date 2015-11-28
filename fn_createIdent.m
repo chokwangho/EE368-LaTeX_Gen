@@ -21,7 +21,7 @@ if nargin == 1
 elseif nargin == 2
     showFigs = false;
 end
-% Parameterss
+% Parameters
 k = 8;
 % IN2, R1-R7, D2-D8, 7 Hu Moments
 identifier = zeros(1,2*k+6);
@@ -50,8 +50,14 @@ end
 % Extract Circular Topology Template and Diameter Ratio
 y = size(char,1);
 x = size(char,2);
-dr = max(max(x - cent_x,cent_x), max(y - cent_y,cent_y)) / (k+1);
+% Meshgrid of distances of character from center to find max
 [c, r] = meshgrid(1:x, 1:y);
+dist = sqrt((c-cent_x).^2+(r-cent_y).^2);
+dist_mask = dist .* char_inv;
+maxDist = max(dist_mask(:));
+dr = maxDist / (k+1);
+% dr = max(max(x - cent_x,cent_x), max(y - cent_y,cent_y)) / (k);
+
 
 % Display Extracted circles
 if(showFigs)
@@ -65,8 +71,7 @@ coding(k).circVec=[];
 for i = 1:k
     rad = dr * i;
     % Create circle line of logical 1s to extract template
-    C = xor(sqrt((c-cent_x).^2+(r-cent_y).^2)<=rad, ...
-        sqrt((c-cent_x).^2+(r-cent_y).^2)<=(rad-1));
+    C = xor(dist<=rad, dist<=(rad-1));
     % Extract circular template linear indices (sort based on theta)
     cidx = find(C);
     % Create matrix linear indices, correspondingn x and y values
@@ -154,12 +159,13 @@ hu_arr = Hu_Moments(eta_mat);
 % 1st moment is IN2, above, in first slot
 identifier(2*k+1:end) = hu_arr(2:end);
 
+% identifier = hu_arr; % For Hu Moments only
 % Normalize Circle counts to same mean as Hu Moments
 % Help significantly with smaller scaled images, hurts test equations
-% hu_mean = mean([IN2 hu_arr(2:end)]);
-% circ_mean = mean(identifier(2:k+1));
-% mult = hu_mean / circ_mean;
-% identifier(2:k+1) = identifier(2:k+1) * mult;
+hu_mean = mean([IN2 hu_arr(2:end)]);
+circ_mean = mean(identifier(2:k+1));
+mult = hu_mean / circ_mean;
+identifier(2:k+1) = identifier(2:k+1) * mult;
 
 % Show character with circles overlaid
 if(showFigs)

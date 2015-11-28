@@ -20,11 +20,12 @@ chars = fn_segment(pal_bin, true);
 
 % Remove doubles from non-contigous characters (manually review and remove)
 % Check for accuracy
-chars(117)=[];
-chars(101)=[];
-chars(100)=[];
-chars(90)=[];
-chars(3)=[];
+chars(119)=[]; %.
+chars(103)=[]; %.
+chars(102)=[]; %.
+chars(92)=[]; %.
+chars(80)=[]; %@
+chars(3)=[]; %~
 
 % Add "truth" labels (verify order in text file versus char struct)
 fileID = fopen(strcat(dir,'/reduced_characters.txt'));
