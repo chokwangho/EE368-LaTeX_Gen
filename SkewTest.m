@@ -1,17 +1,23 @@
-% skew_img = rgb2gray(imread('rotated_eq1.jpg'));
-% non_skew = rgb2gray(imread('LaTeX Equations\eq1_hr.jpg'));
-% thresh = graythresh(skew_img);
-% bw_skew = im2bw(skew_img, thresh);
 
-img = rgb2gray(imread('LaTeX Equations\eq3_hr.jpg'));
 
-theta = 5;
+img = rgb2gray(imread('LaTeX Equations\eq2.jpg'));
+
+detected = zeros(size(-5:0.5:15));
+i = 1;
+err = detected;
+for theta = -5:0.5:15
 rotated = imrotate(img,theta,'bilinear');
 Mrot = ~imrotate(true(size(img)),theta,'bilinear');
 rotated(Mrot&~imclearborder(Mrot)) = 255;
 thresh = graythresh(rotated);
 bw_skew = im2bw(rotated, thresh);
 
-ang = fn_deskew(bw_skew)
-
+detected(i) = fn_deskew(bw_skew);
+if theta ==0
+    err(i) = abs((detected(i)-theta));
+else
+    err(i) = abs((detected(i)-theta)/theta);
+end
+i = i+1;
+end
 

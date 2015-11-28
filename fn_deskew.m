@@ -68,9 +68,17 @@ angles(isnan(angles)) = [];
 if isempty(angles)
    detected_angle = 0; 
 else
-    detected_angle = mean(angles);
+    var_limit = var([0 45]);
+    if var(angles) >= var_limit
+%         detected_angle = angles(1);
+        detected_angle = mean(angles);
+    else
+        detected_angle = mean(angles);
+    end
+    if detected_angle >= 30
+        detected_angle = 0;
+    end
 end
-angles
 
 deskew_img = detected_angle;
 
