@@ -4,7 +4,7 @@
 
 % Assume character palette has been created and saved out. If not, use
 % importCharacterTemplates to do so
-load('red_charPalette.mat');
+load('red_charPalette_withText.mat');
 
 %% Create identifiers for each character
 for i = 1:length(chars)
@@ -21,43 +21,30 @@ for i = 1:length(chars)
     X_orig(i,end) = i;
 end
 % save('red_charPalette_Classifier.mat','X_orig');
-% Results So Far: 68-70% Recognition with scaled iamges
 
-%% Train Nearest Neighbor with Scaled Images
-% num = 2; % Number of different sizes/scales to put in training matrix
-% sizes = [.5 1];
-% X_orig = zeros(num*length(chars), length(chars(1).ident));
-% for j = 1:num
-%     scl = sizes(j);
-%     for i = 1:length(chars)
-%         if(scl ~= 1)
-%             img_scl = imresize(chars(i).img, scl);
-%             % Threshold to binary again
-%             th = graythresh(img_scl);
-%             img_bin = img_scl;
-%             img_bin(img_scl <= th) = 0;
-%             img_bin(img_scl > th) = 1;
-%             identity = fn_createIdent(img_bin);
-%         else
-%             identity = chars(i).ident;
-%         end
-%         X_orig(i+((j-1)*length(chars)),1:length(chars(1).ident)) = identity;
-%         X_orig(i+((j-1)*length(chars)),end) = i;
-%     end
-% end
-% % Results So Far: It is always 1.9%, thinks everything is first 1-3. Not
-% % sure why that is
-
-%% Find percentage correct with resized test images over entire palette
+%% Find percentage correct with resized/rotated test images over entire palette
 correct = 0;
 total = 0;
+% Scale Robustness Test
+scale = false;
 numResize = 4;
 maxScale = 1.25;
 minScale = .5;
+% Skew Robustness Test
+rotate = true;
+numRot = 7;
+minAng = -15;
+maxAng = 15;
 scaleMatches = zeros(1,numResize);
+rotMatches = zeros(1,numRot);
 for j = 1:length(chars)
-    ident_testing = fn_resizeForTest(chars(j).img, numResize, minScale, ...
-        maxScale);
+    if(scale)
+        ident_testing = fn_resizeForTest(chars(j).img, numResize, ...
+            minScale, maxScale);
+    elseif(rotate)
+        ident_testing = fn_rotateForTest(chars(j).img, numRot, ...
+            minAng, maxAng);
+    end
     chars(j).match = [];
     for i = 1:size(ident_testing,1)
        idx_hat = knnsearch(X_orig(:,1:length(chars(1).ident)),...
@@ -67,7 +54,11 @@ for j = 1:length(chars)
        if(j == X_orig(idx_hat,end))
            correct = correct + 1;
            % Increment the correct number for that scale
-           scaleMatches(i) = scaleMatches(i) + 1;
+           if(scale)
+               scaleMatches(i) = scaleMatches(i) + 1;
+           elseif(rotate)
+               rotMatches(i) = rotMatches(i) + 1;
+           end
        else
           % Mark which ones are common false matches
           chars(j).wrong = chars(j).wrong + 1;
@@ -76,15 +67,28 @@ for j = 1:length(chars)
     end
 end
 
-fprintf('Resized Test Images (%d) with KNNSEARCH:\n',numResize);
-fprintf('# of Templates:%d\n',length(chars));
-fprintf('# of Test Images:%d\n\n',total);
-for i = 1:numResize
-   fprintf('Correct for Scale %.2f: %.0f \t %.1f%%\n',...
-        ((maxScale - minScale) / (numResize-1)) * (i-1) + minScale,...
-        scaleMatches(i), (scaleMatches(i)/length(chars))*100);
+if(scale)
+    fprintf('Resized Test Images (%d) with KNNSEARCH:\n',numResize);
+    fprintf('# of Templates:%d\n',length(chars));
+    fprintf('# of Test Images:%d\n\n',total);
+    for i = 1:numResize
+       fprintf('Correct for Scale %.2f: %.0f \t %.1f%%\n',...
+            ((maxScale - minScale) / (numResize-1)) * (i-1) + minScale,...
+            scaleMatches(i), (scaleMatches(i)/length(chars))*100);
+    end
+    fprintf('\nTotal Correct:\t\t%.0f \t %.1f%%\n',correct,(correct/total)*100);
+elseif(rotate)
+    fprintf('Rotated Test Images (%d) (CCW) with KNNSEARCH:\n',numRot);
+    fprintf('# of Templates:%d\n',length(chars));
+    fprintf('# of Test Images:%d\n\n',total);
+    for i = 1:numRot
+       fprintf('Correct for Rotation Angle %.0fDeg: %.0f \t %.1f%%\n',...
+            ((maxAng - minAng) / (numRot - 1)) * (i-1) + minAng,...
+            rotMatches(i), (rotMatches(i)/length(chars))*100);
+    end
+    fprintf('\nTotal Correct:\t\t%.0f \t %.1f%%\n',correct,(correct/total)*100);
 end
-fprintf('\nTotal Correct:\t\t%.0f \t %.1f%%\n',correct,(correct/total)*100);
+
 
 % 80.3% Correct with 119 characters in reduced set using cityblock
 % knnsearch and X_orig with no scaling additions
@@ -167,12 +171,62 @@ fprintf('\nTotal Correct:\t\t%.0f \t %.1f%%\n',correct,(correct/total)*100);
 % Correct for Scale 1.25: 117 	 99.2%
 % 
 % Total Correct:		574 	 97.3%
+%
+% Following are for corrected circular topology (not normalized, k+1)
+% Rotated Test Images (5) (CCW) with KNNSEARCH:
+% # of Templates:118
+% # of Test Images:590
+% 
+% Correct for Rotation Angle -10Deg: 111 	 94.1%
+% Correct for Rotation Angle -5Deg: 113 	 95.8%
+% Correct for Rotation Angle 0Deg: 118 	 100.0%
+% Correct for Rotation Angle 5Deg: 113 	 95.8%
+% Correct for Rotation Angle 10Deg: 109 	 92.4%
+% 
+% Total Correct:		564 	 95.6%
+% 
+% Resized Test Images (4) with KNNSEARCH:
+% # of Templates:118
+% # of Test Images:472
+% 
+% Correct for Scale 0.50: 107 	 90.7%
+% Correct for Scale 0.75: 115 	 97.5%
+% Correct for Scale 1.00: 118 	 100.0%
+% Correct for Scale 1.25: 116 	 98.3%
+% 
+% Total Correct:		456 	 96.6%
+
+% With normalized circle topology, k+1.
+% Rotated Test Images (7) (CCW) with KNNSEARCH:
+% # of Templates:118
+% # of Test Images:826
+% 
+% Correct for Rotation Angle -15Deg: 105 	 89.0%
+% Correct for Rotation Angle -10Deg: 112 	 94.9%
+% Correct for Rotation Angle -5Deg: 116 	 98.3%
+% Correct for Rotation Angle 0Deg: 118 	 100.0%
+% Correct for Rotation Angle 5Deg: 116 	 98.3%
+% Correct for Rotation Angle 10Deg: 112 	 94.9%
+% Correct for Rotation Angle 15Deg: 108 	 91.5%
+% 
+% Total Correct:		787 	 95.3%
+%
+% Resized Test Images (4) with KNNSEARCH:
+% # of Templates:118
+% # of Test Images:472
+% 
+% Correct for Scale 0.50: 115 	 97.5%
+% Correct for Scale 0.75: 117 	 99.2%
+% Correct for Scale 1.00: 118 	 100.0%
+% Correct for Scale 1.25: 118 	 100.0%
+% 
+% Total Correct:		468 	 99.2%
 
 %% Show which characters are being mismatched with which
 
 matches = [(1:length(chars))' cat(1,chars.match)];
-matches_bool = matches(:,2:end) ~= repmat(matches(:,1),1,numResize);
-scl = 4; %Pick a scale number (1 to numResize above)
+matches_bool = matches(:,2:end) ~= repmat(matches(:,1),1,numRot);
+scl = 2; %Pick a scale number (1 to numResize above)
 [row, col] = find(matches_bool(:,scl));
 figure(1);
 for i = 1:length(row)
@@ -184,7 +238,10 @@ end
 
 %% Test with input equation
 dir = strcat(pwd,'/LaTeX Equations');
-eq = im2double(rgb2gray(imread(strcat(dir,'/eq8_hr.jpg'))));
+eq = im2double(rgb2gray(imread(strcat(dir,'/eq9_hr.jpg'))));
+% 
+% eq_rot = imrotate(ones(size(eq))-eq,15);
+% eq = ones(size(eq_rot)) - eq_rot;
 
 th = graythresh(eq);
 eq_bin = eq;
