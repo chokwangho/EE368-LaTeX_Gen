@@ -1,8 +1,7 @@
 function bw_img = fn_lighting_compensation(img)
 %FN_LIGHTING_COMPENSATION Takes in an rgb image of an equation and
 % returns a binarized version of the image for which uneven lighting has
-% been compensated. Also, the output has been inverted so that dark text in
-% the input is now the foreground of the output.
+% been compensated. Output will not be inverted.
 
 gray_img=rgb2gray(img);
 [height, width] = size(gray_img);
@@ -33,3 +32,7 @@ holes = filled & ~bw_img;
 lg_holes = bwareaopen(holes,small_hole_thresh);
 sm_holes = holes &~lg_holes;
 bw_img = bw_img | sm_holes;
+
+% Return image to original polarity.
+bw_img = ~bw_img;
+end
