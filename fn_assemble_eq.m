@@ -227,6 +227,7 @@ control = {
     'Psi'
     'Omega'
     'int'
+    'rightarrow'
     };
 end
 
