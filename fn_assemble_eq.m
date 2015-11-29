@@ -228,7 +228,6 @@ control = {
     'Omega'
     'int'
     'rightarrow'
-    'ifty'
     };
 end
 
