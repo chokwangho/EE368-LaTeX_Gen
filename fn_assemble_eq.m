@@ -418,6 +418,7 @@ control = {
     'Omega'
     'int'
     'rightarrow'
+    'infty'
     };
 end
 
