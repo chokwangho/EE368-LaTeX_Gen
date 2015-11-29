@@ -8,8 +8,8 @@ for i = 1:length(listing)
     if ~listing(i).isdir && ~strcmp(fname,'.') && ~strcmp(fname,'..')
         img = imread([lighting_dir fname]);
         bw_img = fn_lighting_compensation(img);
-        detected_angle = fn_deskew2(bw_img)
-        out_img = imrotate(bw_img,detected_angle);
+        [out_img, detected_angle] = fn_deskew2(bw_img,true,true,6);
+%         out_img = imrotate(bw_img,detected_angle);
         imwrite(out_img,[results_dir 'result_hough_' fname]);
     end
 end
