@@ -43,8 +43,8 @@ if length(chars) ~= num_chars
     end    
 end
 
-% Get eqn height to detect exponents
-eqn_height = help_get_eqn_height(chars);
+% variables for super/subscript checks
+prev_centroid_y_coord = NaN;
 prev_fraction = false; % Don't check for exponents if previously saw a fraction
 is_super = false; % Flag to know when we are in an exponent
 is_sub = false; % Flag for subscript
@@ -113,7 +113,7 @@ while i <= num_chars
                 ll_corner = boxes(2,i)+boxes(4,i);
                 ul_corner = boxes(2,i);
 %                 prev_centroid_y_coord = chars(i-1).centroid(2);
-                ul_diff = boxes(2,i) - prev_centroid_y_coord;
+%                 ul_diff = boxes(2,i) - prev_centroid_y_coord;
                 total_height = boxes(4,i);
                 if ll_corner <= ceil(prev_centroid_y_coord) % && total_height<= script_perc*eqn_height
                    % Check to see if this was a '-'. If so, it
@@ -281,6 +281,14 @@ while i <= num_chars
                 % get the bar
                 frac_bar = overlap_chars(bar_idx);
                 frac_y_coord = frac_bar.centroid(2);
+                frac_bar_height = frac_bar.boundingbox(4);
+                
+                % Check if fraction is an exponent (need to check if is NaN
+                % in case fraction is first character)
+                if ~isnan(prev_centroid_y_coord) && frac_y_coord < prev_centroid_y_coord - 7*frac_bar_height
+                    is_super = true;
+                    eq_string = [strtrim(eq_string) '^{'];
+                end
                 
                 % Store frac_bar centroid y for super/subscript checks
                 prev_centroid_y_coord = frac_y_coord;  
