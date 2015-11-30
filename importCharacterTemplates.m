@@ -8,7 +8,7 @@
 % their character string and identifier data. Output used by "main.m"
 
 dir = strcat(pwd,'/LaTeX Equations');
-palette = im2double(rgb2gray(imread(strcat(dir,'/reduced_characterPalette.jpg'))));
+palette = im2double(rgb2gray(imread(strcat(dir,'/red_characterPalette_LR.jpg'))));
 
 th = graythresh(palette);
 pal_bin = palette;
@@ -27,7 +27,7 @@ chars(90)=[];
 chars(3)=[];
 
 % Add "truth" labels (verify order in text file versus char struct)
-fileID = fopen(strcat(dir,'/reduced_characters.txt'));
+fileID = fopen(strcat(dir,'/reduced_characters_noslash.txt'));
 text_chars = textscan(fileID,'%s', 'delimiter',',');
 text_chars = char(text_chars{1,1});
 fclose(fileID);
@@ -35,7 +35,7 @@ fclose(fileID);
 %% Create identifiers for each character
 for i = 1:length(chars)
     chars(i).ident = fn_createIdent(chars(i).img);
-    chars(i).char = text_chars(i,:);
+%     chars(i).char = strtrim(text_chars(i,:));
 end
 
 %% Save out character palette

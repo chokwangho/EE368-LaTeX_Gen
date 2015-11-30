@@ -22,12 +22,15 @@ switch nargin
         soften_size = 5;
 end
 
-edges = edge(bw_img,'canny');
+edges = edge(bw_img);
 [H,T,~] = hough(edges,'RhoResolution',1,'ThetaResolution', 0.1 );
 
 P = houghpeaks(H,1);
 
-deskewing_angle = T(P(1,2))-90; 
+deskewing_angle = T(P(1,2))-90;
+while(-deskewing_angle > 40)
+    deskewing_angle = deskewing_angle + 180;
+end
 deskew_img = imrotate(bw_img,deskewing_angle,'bilinear');
 if fill_flag
     Mrot = ~imrotate(true(size(bw_img)),deskewing_angle,'bilinear');

@@ -4,6 +4,8 @@ function bw_img = fn_lighting_compensation(img)
 % been compensated. Output will not be inverted.
 
 gray_img=rgb2gray(img);
+fg = fspecial('gaussian', 10, 3);
+gray_img = imfilter(gray_img, fg, 'conv','replicate');
 [height, width] = size(gray_img);
 
 % Set the window size of the filter based on image dimensions
@@ -26,7 +28,7 @@ bw_img = imclose(bw_img,se);
 
 
 % Fill small holes (less than 5% of area of image)
-small_hole_thresh = round(0.0005*height*width);
+small_hole_thresh = round(0.0001*height*width);
 filled = imfill(bw_img,'holes');
 holes = filled & ~bw_img;
 lg_holes = bwareaopen(holes,small_hole_thresh);

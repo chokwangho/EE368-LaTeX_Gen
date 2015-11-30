@@ -7,6 +7,7 @@ if nargin == 1
 end
 
 se = true(se_size,se_size);
+se = strel('disk',se_size);
 
 softened = imopen(bw_img,se);
 
