@@ -13,9 +13,6 @@ limit_control = {'int','sum','prod','lim'}; % Controls that can have the \limits
 % Set white space threshold in pixels for letters
 space = 10;
 
-% Set sub/superscript threshold as fraction of height
-script_perc = 0.5;
-
 eq_string = '';
 chars = EqStruct.characters;
 num_chars = length(chars);
@@ -112,9 +109,7 @@ while i <= num_chars
             if i-1 > 0 && ~prev_fraction
                 ll_corner = boxes(2,i)+boxes(4,i);
                 ul_corner = boxes(2,i);
-%                 prev_centroid_y_coord = chars(i-1).centroid(2);
-%                 ul_diff = boxes(2,i) - prev_centroid_y_coord;
-                total_height = boxes(4,i);
+                
                 if ll_corner <= ceil(prev_centroid_y_coord) % && total_height<= script_perc*eqn_height
                    % Check to see if this was a '-'. If so, it
                    %  should be pretty high in order to be an exponent
@@ -131,7 +126,6 @@ while i <= num_chars
                        
                        % Store centroid to check for exponents
                        prev_centroid_y_coord = chars(i).centroid(2);
-                       prev_top_y_coord = chars(i).boundingbox(2);
                        
                        if i+1<= num_chars
                            dist_to_next = boxes(1,i+1)-ur_x_coord;
@@ -149,7 +143,6 @@ while i <= num_chars
                     
                         % Store centroid to check for exponents
                         prev_centroid_y_coord = chars(i).centroid(2);  
-                        prev_top_y_coord = chars(i).boundingbox(2);
                         
                         if i+1<= num_chars
                             dist_to_next = boxes(1,i+1)-ur_x_coord;
@@ -174,7 +167,6 @@ while i <= num_chars
                     
                         % Store centroid to check for exponents
                         prev_centroid_y_coord = chars(i).centroid(2);  
-                        prev_top_y_coord = chars(i).boundingbox(2);
                     end
                 else
                     % Normal op
@@ -182,7 +174,6 @@ while i <= num_chars
                     
                     % Store centroid to check for exponents
                     prev_centroid_y_coord = chars(i).centroid(2);  
-                    prev_top_y_coord = chars(i).boundingbox(2);
                     
                     if i+1<= num_chars
                         dist_to_next = boxes(1,i+1)-ur_x_coord;
@@ -197,7 +188,6 @@ while i <= num_chars
                 
                 % Store centroid to check for exponents
                 prev_centroid_y_coord = chars(i).centroid(2);  
-                prev_top_y_coord = chars(i).boundingbox(2);
                 
                 if i+1<= num_chars
                     dist_to_next = boxes(1,i+1)-ur_x_coord;
@@ -228,8 +218,7 @@ while i <= num_chars
                 eq_string = [eq_string detected];
                 
                 % Store centroid to check for exponents
-                prev_centroid_y_coord = chars(i).centroid(2);  
-                prev_top_y_coord = chars(i).boundingbox(2);
+                prev_centroid_y_coord = chars(i).centroid(2); 
             else
                 
                 overlap_char = chars(i+1).char;
@@ -239,7 +228,6 @@ while i <= num_chars
                     
                     % Store average y_coord between the 2 equal bars
                     prev_centroid_y_coord = 1/2*(chars(i).centroid(2)+chars(i+1).centroid(2));  
-                    prev_top_y_coord = Inf; % '=' should not have an exponent
                 end
                 i = i+1; % Skip next char
             end
@@ -292,7 +280,6 @@ while i <= num_chars
                 
                 % Store frac_bar centroid y for super/subscript checks
                 prev_centroid_y_coord = frac_y_coord;  
-                prev_top_y_coord = frac_bar.boundingbox(2);
                 
                 % Get the numerator and denominator characters by comparing
                 % centroid to the frac bar y coord.
@@ -311,6 +298,12 @@ while i <= num_chars
                 
                 detected = ['\frac{' numer_str '}{' denom_str '}'];
                 
+                % Limitation: fraction must be end of exponent
+                if is_super
+                    is_super = false;
+                    detected = [detected '}'];
+                end
+                
                 % Set counter to next character
                 i = find(overlap_idx,1,'last');
                 
@@ -323,7 +316,6 @@ while i <= num_chars
                 
                 % Store limit character centroid y for super/subscript
                 prev_centroid_y_coord = limit_y_coord;  
-                prev_top_y_coord = limit_char.boundingbox(2);
                 
                 % Get the top and bottom characters by comparing
                 % centroid to the frac bar y coord.
@@ -432,16 +424,6 @@ end
 
 function out =  help_is_letter(str)
     out = length(str)==1 && isstrprop(str,'alpha');
-end
-
-function eq_height = help_get_eqn_height(chars)
-    % Heuristic: max height of a character
-    eq_height = 0;
-    for i = 1:length(chars)
-        if chars(i).boundingbox(4) > eq_height
-            eq_height = chars(i).boundingbox(4);
-        end
-    end
 end
 
 function new_chars = help_preprocess_chars(chars,boxes)
