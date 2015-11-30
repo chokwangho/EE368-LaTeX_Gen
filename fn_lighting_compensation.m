@@ -7,7 +7,7 @@ gray_img=rgb2gray(img);
 [height, width] = size(gray_img);
 
 % Set the window size of the filter based on image dimensions
-win_size = round(min(height/50,width/50));
+win_size = round(min(height/60,width/60));
 
 % Get the window mean of each pixel by filtering using an averaging filter
 window_means=imfilter(gray_img,fspecial('average',win_size),'replicate');
