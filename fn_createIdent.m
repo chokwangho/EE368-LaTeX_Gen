@@ -28,6 +28,27 @@ identifier = zeros(1,2*k+6);
 
 char_inv = ones(size(char)) - char;
 
+% If white border on any edge, pad with more 1s
+pad = 5;
+% top
+if(sum(char_inv(1,:)) == 0)
+    char = [ones(pad,size(char,2)) ;char];
+end
+% bottom
+if(sum(char_inv(end,:)) == 0)
+    char = [char; ones(pad,size(char,2))];
+end
+% left
+if(sum(char_inv(:,1)) == 0)
+    char = [ones(size(char,1),pad) char];
+end
+% right
+if(sum(char_inv(:,end)) == 0)
+    char = [char ones(size(char,1),pad)];
+end
+% Recalculate for centroid
+char_inv = ones(size(char)) - char;
+
 % Total number of pixels in character
 N = sum(~char(:));
 % Find x,y positions of 0 elements (character)
@@ -96,8 +117,11 @@ for i = 1:k
     % Extract values from character based on circular indices. Start at
     % 0deg going CCW.
     % Need to do closing of gaps? Initially seems better without
-%     circVec = ones(size(circVec))-imclose(ones(size(circVec))-circVec,ones(2,1));
-    circVec = imopen(circVec,ones(2,1));
+%     if(i <= 6)
+        circVec = imopen(circVec,ones(2,1));
+%     else
+%         circVec = imopen(circVec,ones(4,1));
+%     end
     
     % Save vector for debugging or future use
     coding(i).circ = circVec;
@@ -166,12 +190,16 @@ identifier(2*k+1:end) = hu_arr(2:end);
 %TEST: Hu Moments Only
 % identifier = hu_arr;
 
+% TEST Remove first circle
+
 % Normalize Circle counts to same mean as Hu Moments
 % Help significantly with smaller scaled images, hurts test equations
 % hu_mean = mean([IN2 hu_arr(2:end)]);
 % circ_mean = mean(identifier(2:k+1));
 % mult = hu_mean / circ_mean;
 % identifier(2:k+1) = identifier(2:k+1) * mult;
+% Reduce weight
+% identifier(2:k+1) = identifier(2:k+1) / sum(identifier(2:k+1));
 
 % Show character with circles overlaid
 if(showFigs)
