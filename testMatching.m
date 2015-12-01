@@ -238,15 +238,22 @@ end
 
 %% Test with input equation
 dir = strcat(pwd,'/LaTeX Equations');
-eq = im2double(rgb2gray(imread(strcat(dir,'/eq9_hr.jpg'))));
-% 
-% eq_rot = imrotate(ones(size(eq))-eq,15);
-% eq = ones(size(eq_rot)) - eq_rot;
+% dir = strcat(pwd,'/Lighting');
+% eq = im2double(rgb2gray(imread(strcat(dir,'/eq7_hr.jpg'))));
+% th = graythresh(eq);
+% eq_bin = eq;
+% eq_bin(eq <= th) = 0;
+% eq_bin(eq > th) = 1;
 
-th = graythresh(eq);
-eq_bin = eq;
-eq_bin(eq <= th) = 0;
-eq_bin(eq > th) = 1;
+% eq_rot = imrotate(ones(size(eq))-eq,15);
+% eq = ones(size(eq_rot)) - eq_rot;_test_lightin
+
+eq = imread(strcat(dir,'/eq14_hr.jpg'));
+eq_bin = fn_lighting_compensation(eq);
+% [eq_deskew, ~] = fn_deskew2(eq_bin,true,true,3);
+% eq_bin = eq_deskew;
+figure(1);
+imshow(eq_bin);
 
 eq_chars = fn_segment(eq_bin);
 for i = 1:length(eq_chars)
@@ -261,6 +268,7 @@ for i = 1:length(eq_chars)
     
     idx_matched = knnsearch(X_orig(:,1:length(chars(1).ident)),...
         eq_chars(i).ident,'distance','cityblock');
+    eq_chars(i).char = chars(X_orig(idx_matched,end)).char;
     subplot(2,length(eq_chars),i+length(eq_chars));
     imshow(chars(X_orig(idx_matched,end)).img);
     str = sprintf('Matched %d',X_orig(idx_matched,end));

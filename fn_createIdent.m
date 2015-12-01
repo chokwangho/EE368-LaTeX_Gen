@@ -29,7 +29,7 @@ identifier = zeros(1,2*k+6);
 char_inv = ones(size(char)) - char;
 
 % If white border on any edge, pad with more 1s
-pad = 5;
+pad = 3;
 % top
 if(sum(char_inv(1,:)) == 0)
     char = [ones(pad,size(char,2)) ;char];
@@ -73,19 +73,12 @@ y = size(char,1);
 x = size(char,2);
 dr = max(max(x - cent_x,cent_x), max(y - cent_y,cent_y)) / (k+1);
 [c, r] = meshgrid(1:x, 1:y);
- 
-% Meshgrid of distances of character from center to find max  
-% [c, r] = meshgrid(1:x, 1:y);  
-% dist = sqrt((c-cent_x).^2+(r-cent_y).^2);  
-% dist_mask = dist .* char_inv;  
-% maxDist = max(dist_mask(:));  
-% dr = maxDist / (k+1);  
 
 % Display Extracted circles
 if(showFigs)
     figure(1);
     % Create copy of character to display circles overlaid
-    tempcirc = double(char);
+    tempcirc = char;
 end
 
 % Init coding vector for storing extra information
@@ -95,7 +88,6 @@ for i = 1:k
     % Create circle line of logical 1s to extract template
     C = xor(sqrt((c-cent_x).^2+(r-cent_y).^2)<=rad, ...
         sqrt((c-cent_x).^2+(r-cent_y).^2)<=(rad-1));
-%     C = xor(dist<=rad, dist<=(rad-1)); 
     % Extract circular template linear indices (sort based on theta)
     cidx = find(C);
     % Create matrix linear indices, correspondingn x and y values
@@ -117,18 +109,14 @@ for i = 1:k
     % Extract values from character based on circular indices. Start at
     % 0deg going CCW.
     % Need to do closing of gaps? Initially seems better without
-%     if(i <= 6)
-        circVec = imopen(circVec,ones(2,1));
-%     else
-%         circVec = imopen(circVec,ones(4,1));
-%     end
+    circVec = ones(size(circVec))-imclose(ones(size(circVec))-circVec,ones(2,1));
     
     % Save vector for debugging or future use
     coding(i).circ = circVec;
     
     % If character is so small nothing is extracted, leave ident as 0
     if(~isempty(circVec))
-        % Count number of sections of at least 2 (3?) 0s. This is the number of
+        % Count number of sections of at least 2 0s. This is the number of
         % character sections the circle goes through.
         cnt = strfind([1 1 circVec'],[0 0]);
         coding(i).count = length(cnt(diff([1 cnt])~=1));
@@ -187,19 +175,12 @@ hu_arr = Hu_Moments(eta_mat);
 % 1st moment is IN2, above, in first slot
 identifier(2*k+1:end) = hu_arr(2:end);
 
-%TEST: Hu Moments Only
-% identifier = hu_arr;
-
-% TEST Remove first circle
-
 % Normalize Circle counts to same mean as Hu Moments
 % Help significantly with smaller scaled images, hurts test equations
 % hu_mean = mean([IN2 hu_arr(2:end)]);
 % circ_mean = mean(identifier(2:k+1));
 % mult = hu_mean / circ_mean;
 % identifier(2:k+1) = identifier(2:k+1) * mult;
-% Reduce weight
-% identifier(2:k+1) = identifier(2:k+1) / sum(identifier(2:k+1));
 
 % Show character with circles overlaid
 if(showFigs)
@@ -208,4 +189,5 @@ if(showFigs)
 end
 
 end
+
 

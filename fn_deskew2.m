@@ -37,7 +37,7 @@ if fill_flag
     deskew_img(Mrot&~imclearborder(Mrot)) = true;
 end
 
-if soften_flag
+if soften_flag && abs(deskewing_angle) > 5
     deskew_img = fn_soften_edges(deskew_img, soften_size);
 end
 
