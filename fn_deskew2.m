@@ -25,12 +25,31 @@ end
 edges = edge(bw_img);
 [H,T,~] = hough(edges,'RhoResolution',1,'ThetaResolution', 0.1 );
 
-P = houghpeaks(H,1);
+%% Previous Implementation
+% P = houghpeaks(H,1);
 
-deskewing_angle = T(P(1,2))-90;
-while(-deskewing_angle > 40)
-    deskewing_angle = deskewing_angle + 180;
+% deskewing_angle = T(P(1,2))-90;
+
+% while(-deskewing_angle > 40)
+%     deskewing_angle = deskewing_angle + 180;
+% end
+
+%% Current Implementation
+P = houghpeaks(H,4);
+
+dominant_orientation = mode(P(:,2));
+if length(dominant_orientation) > 1
+    dominant_orientation = dominant_orientation(1);
 end
+deskewing_angle = T(dominant_orientation)-90;
+
+
+while(abs(deskewing_angle) > 40)
+    deskewing_angle = deskewing_angle - sign(deskewing_angle)*90;
+end
+
+%% End Changes
+
 deskew_img = imrotate(bw_img,deskewing_angle,'bilinear');
 if fill_flag
     Mrot = ~imrotate(true(size(bw_img)),deskewing_angle,'bilinear');
