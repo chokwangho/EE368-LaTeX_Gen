@@ -22,8 +22,13 @@ for i =1:length(files)
     eq = imread(strcat(path,files(i).name));
     
     % Modify image "eq" for testing (rotate, scale, etc)
-    
-    
+    % Rotate by 10deg 
+%     ang = 10;
+%     mask = true(size(eq(:,:,1)));
+%     mask_rot = imrotate(mask,ang);
+%     mask_rot = imerode(mask_rot,ones(4,4));
+%     eq = imrotate(eq,ang,'bilinear');
+%     eq(~repmat(mask_rot,1,1,3)) = 255;
     
     % Process equation to get matched characters
     eq_bin = fn_lighting_compensation(eq);
@@ -50,7 +55,7 @@ for i =1:length(files)
        end
     end
     
-    for j = 1:length(eq_chars_truth)
+    for j = 1:length(eq_chars)
         if(strcmp(eq_chars(j).char, eq_chars_truth(j).char))
            correct = correct + 1; 
         end
