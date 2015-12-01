@@ -16,7 +16,7 @@ files = dir(directory);
 
 totcorrect=0;
 tot_total=0;
-for i =1:2%length(files)
+for i =1:length(files)
     correct = 0;
     total = 0;
     eq = imread(strcat(path,files(i).name));
@@ -34,12 +34,13 @@ for i =1:2%length(files)
     for j = 1:length(eq_chars)
        eq_chars(j).ident = fn_createIdent(eq_chars(j).img); 
     end
-    
+    % Find matches
     for j = 1:length(eq_chars)
         idx_matched = knnsearch(X_orig(:,1:length(chars(1).ident)),...
             eq_chars(j).ident,'distance','cityblock');
         eq_chars(j).char = chars(X_orig(idx_matched,end)).char;
     end
+    
     % Compare found char strings vs truth char strings
     % Get truth chars
     eq_chars_truth=[];
