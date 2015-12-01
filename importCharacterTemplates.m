@@ -8,23 +8,25 @@
 % their character string and identifier data. Output used by "main.m"
 
 dir = strcat(pwd,'/LaTeX Equations');
-palette = im2double(rgb2gray(imread(strcat(dir,'/red_characterPalette_LR.jpg'))));
-
+palette = im2double(rgb2gray(imread(strcat(dir,'/red_characterPalette.jpg'))));
 th = graythresh(palette);
 pal_bin = palette;
 pal_bin(palette <= th) = 0;
 pal_bin(palette > th) = 1;
 
+% palette = imread(strcat(dir,'/red_characterPalette.jpg'));
+% pal_bin = fn_lighting_compensation(palette);
+
 %% Extract character templates
-chars = fn_segment(pal_bin, true);
+chars = fn_segment(pal_bin);
 
 % Remove doubles from non-contigous characters (manually review and remove)
 % Check for accuracy
-chars(117)=[];
-chars(101)=[];
-chars(100)=[];
-chars(90)=[];
-chars(3)=[];
+chars(117)=[]; %.
+chars(101)=[]; %.
+chars(100)=[]; %.
+chars(90)=[]; %.
+chars(3)=[]; %~
 
 % Add "truth" labels (verify order in text file versus char struct)
 fileID = fopen(strcat(dir,'/reduced_characters_noslash.txt'));
@@ -35,11 +37,11 @@ fclose(fileID);
 %% Create identifiers for each character
 for i = 1:length(chars)
     chars(i).ident = fn_createIdent(chars(i).img);
-%     chars(i).char = strtrim(text_chars(i,:));
+    chars(i).char = strtrim(text_chars(i,:));
 end
 
 %% Save out character palette
-% save('red_charPalette_withText.mat','chars');
+save('red_charPalette_withText.mat','chars'); %_demo has T and S removed
 
 %% Train Nearest Neighbor Classifier
 % Create data matrix for KNN Search with just original templates
@@ -48,4 +50,4 @@ for i = 1:length(chars)
     X_orig(i,1:length(chars(1).ident)) = chars(i).ident;
     X_orig(i,end) = i;
 end
-% save('red_charPalette_Classifier.mat','X_orig');
+save('red_charPalette_Classifier.mat','X_orig');

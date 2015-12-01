@@ -3,7 +3,7 @@ Delta,P,neq,beta,nu,o,*,b,1,C,Q
 Theta,-,p,gamma,xi,2,c,(,D,R,Lambda
 pi,d,3,q,delta,/,),E,Pi,S,int
 rho,4,r,e,epsilon,[,infty,F,T,Sigma,sigma
-d,varepsilon,5,s,{,sqrt,G,U,Upsilon,tau,g
+f,varepsilon,5,s,{,sqrt,G,U,Upsilon,tau,g
 zeta,6,},t,H,V,phi,upsilon,u,eta,h
 7,.,W,rightarrow,Psi,phi,v,I,theta,8,i
 X,w,Omega,varphi,vartheta,j,J,9,!,K,Y

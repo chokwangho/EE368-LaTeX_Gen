@@ -1,53 +1,55 @@
-function [ eq_string ] = fn_main( fileName, showFigs )
-%UNTITLED2 Summary of this function goes here
-%   fileName = name of image. Assumes image is in directory 
-%   '/LaTeX Equations/'
+function [ eq_string ] = fn_main( fileName, showFigs, outputName )
+%fn_main Generate a .tex file of LaTeX code for equation in input image
+%   This function will generate the LaTeX code to reproduce the equation in
+%       the input image. The input image is assumed to be a jpg of a singel
+%       equation (black on white) without other text. Can handle skew and
+%       uneven lighting.
+%
+%   fileName: file name to jpg input image, assume in subfolder 'LaTeX
+%       Equations'
+%   showFigs: Set true to show all figure outputs of process. default is false
+%   outputName: Optional filename for output .tex file (no extension). If
+%       none specified, will use input file name.
+%
+%   eq_string: Returns the string of the equation LaTeX code.
+
+if nargin == 1
+    showFigs = false;
+    outputName = fileName(1:end-4);
+elseif nargin == 2
+    outputName = fileName(1:end-4);
+end
 
 %% Load Template Character Template Data and Identity Info
 % If not available, see importCharacterTemplates.m to create
-load('red_charPalette_withText.mat');
-load('red_charPalette_Classifier.mat');
+load('red_charPalette_withText_demo.mat');
+load('red_charPalette_Classifier_demo.mat');
 
-%% Read in desired equation and convert to double grayscale
+%% Read in desired equation
 dir = strcat(pwd,'/LaTeX Equations/');
 eq = imread(strcat(dir,fileName));
-% eq = imrotate(ones(size(eq)) - im2double(eq),10,'bilinear');
-% eq = ones(size(eq)) - eq;
+if(showFigs)
+    figure(1);
+    imshow(eq);
+end
 
 %% Optimize page and binarize
 eq_bin = fn_lighting_compensation(eq);
 if(showFigs)
-    figure(1);
+    figure(2);
     imshow(eq_bin);
 end
 
-[eq_deskew, ang] = fn_deskew2(eq_bin,true,true,3);
-
-% deskewed = imrotate(eq,ang);
-% mask = true(size(eq(:,:,1)));
-% mask_rot = imrotate(mask,ang);
-% mask_rot = imerode(mask_rot,ones(2,2));
-% 
-% eq_deskew = fn_lighting_compensation(deskewed);
-% eq_deskew(~mask_rot) = true;
-% eq_deskew = fn_soften_edges(eq_deskew,3);
+[eq_deskew, ~] = fn_deskew2(eq_bin,true,true, 5);
 
 if(showFigs)
-    figure(2);
+    figure(3);
     imshow(eq_deskew);
 end
 
-% TESTING code to binarize until optimize page code finished
-% eq = im2double(rgb2gray(eq));
-% th = graythresh(eq);
-% eq_bin = eq;
-% eq_bin(eq <= th) = 0;
-% eq_bin(eq > th) = 1;
-% eq_deskew = eq_bin;
-
 %% Segment Equation Characters and Create Identifier
 if(showFigs)
-    eq_chars = fn_segment(eq_deskew,true,3);
+    eq_chars = fn_segment(eq_deskew,true,4);
 else
     eq_chars = fn_segment(eq_deskew);
 end
@@ -62,9 +64,9 @@ for i = 1:length(eq_chars)
     % Set the matched character value
     eq_chars(i).char = chars(X_orig(idx_matched,end)).char;
     
-    % OPTIONAL: Code to show input characters and their determined matches
+    % Code to show input characters and their determined matches
     if(showFigs)
-        figure(5);
+        figure(6);
         subplot(2,length(eq_chars),i);
         imshow(eq_chars(i).img);
         title('Input');
@@ -85,11 +87,9 @@ end
 
 EqStruct.characters = eq_chars;
 eq_string = fn_assemble_eq(EqStruct);
-disp(eq_string);
 
 %% Output LaTeX Code
-writeTex(eq_string, strcat(dir,fileName(1:end-4)));
-
+writeTex(eq_string, strcat(dir,outputName));
 
 end
 
