@@ -6,16 +6,19 @@
 % of matched characters, count how many matched and weren't matched
 
 load('red_charPalette_withText_demo2.mat');
-load('red_charPalette_Classifier_demo2.mat');
-load('equation_truth.mat');
+load('red_charPalette_Classifier_demo.mat');
+load('equation_truth_mod.mat');
 
 % Get file names of images to modify to test
-path = strcat(pwd,'/LaTeX Equations/');
+path = strcat(pwd,'/Lighting/');
 directory = strcat(path,'*hr.jpg');
 files = dir(directory);
-
-totcorrect=0;
-tot_total=0;
+% results=[];
+% angles = -25:5:15;
+% for a = 1:length(angles)
+%     ang = angles(a);
+    totcorrect=0;
+    tot_total=0;
 for i =1:length(files)
     correct = 0;
     total = 0;
@@ -23,7 +26,7 @@ for i =1:length(files)
     
     % Modify image "eq" for testing (rotate, scale, etc)
     % Rotate by 10deg 
-%     ang = 10;
+%     ang = 5;
 %     mask = true(size(eq(:,:,1)));
 %     mask_rot = imrotate(mask,ang);
 %     mask_rot = imerode(mask_rot,ones(4,4));
@@ -32,7 +35,7 @@ for i =1:length(files)
     
     % Process equation to get matched characters
     eq_bin = fn_lighting_compensation(eq);
-    [eq_deskew, ~] = fn_deskew2(eq_bin,true,true,3);
+    [eq_deskew, ~] = fn_deskew2(eq_bin,true,true,5);
     eq_bin = eq_deskew;
     
     eq_chars = fn_segment(eq_bin);
@@ -55,7 +58,7 @@ for i =1:length(files)
        end
     end
     
-    for j = 1:length(eq_chars)
+    for j = 1:min(length(eq_chars), length(eq_chars_truth))
         if(strcmp(eq_chars(j).char, eq_chars_truth(j).char))
            correct = correct + 1; 
         end
@@ -66,6 +69,18 @@ for i =1:length(files)
     fprintf('Correct for file: %s \t %d\\%d \t %.1f%%\n',files(i).name,...
         correct,total,(correct/total)*100);
 end
-
-fprintf('\nTotal Correct : %s \t %d\\%d \t %.1f%%\n',files(i).name,...
+fprintf('\nTotal Correct: \t %d\\%d \t %.1f%%\n',...
         totcorrect,tot_total,(totcorrect/tot_total)*100);
+% 
+% results = [results [ang; (totcorrect/tot_total)*100]];
+% fprintf('\nTotal Correct %.0f deg: \t %d\\%d \t %.1f%%\n',ang,...
+%         totcorrect,tot_total,(totcorrect/tot_total)*100);
+% end
+% 
+% figure(1);
+% plot(results(1,:), results(2,:),'LineWidth',2);
+% xlabel('Rotation Angle (degrees)');
+% ylabel('Matched Character precentage');
+% title('Matching Robustness to Equation (Clean) Rotation');
+% axis([-25 15 0 100]);
+% print('rotation_robustness','-dpdf');

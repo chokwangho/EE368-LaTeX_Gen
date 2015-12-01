@@ -1,0 +1,115 @@
+All Perfect Images (desk OFF):
+Correct for file: demo_equation_hr.jpg 	 20\22 	 90.9%
+Correct for file: eq10-2_hr.jpg 	 12\13 	 92.3%
+Correct for file: eq10_hr.jpg 	 10\11 	 90.9%
+Correct for file: eq11_hr.jpg 	 5\5 	 100.0%
+Correct for file: eq12_hr.jpg 	 8\8 	 100.0%
+Correct for file: eq13_hr.jpg 	 4\5 	 80.0%
+Correct for file: eq14_hr.jpg 	 4\4 	 100.0%
+Correct for file: eq1_hr.jpg 	 7\7 	 100.0%
+Correct for file: eq2_hr.jpg 	 7\7 	 100.0%
+Correct for file: eq3_hr.jpg 	 9\9 	 100.0%
+Correct for file: eq5_hr.jpg 	 8\8 	 100.0%
+Correct for file: eq6_hr.jpg 	 11\11 	 100.0%
+Correct for file: eq7_hr.jpg 	 19\19 	 100.0%
+Correct for file: eq8_hr.jpg 	 15\15 	 100.0%
+Correct for file: eq9_hr.jpg 	 11\13 	 84.6%
+
+Total Correct : eq9_hr.jpg 	 150\157 	 95.5%
+
+Rotate Perfect Images 10 deg (exclude 3, 12):
+Correct for file: demo_equation_hr.jpg 	 21\22 	 95.5%
+Correct for file: eq10-2_hr.jpg 	 10\13 	 76.9%
+Correct for file: eq10_hr.jpg 	 9\11 	 81.8%
+Correct for file: eq11_hr.jpg 	 0\5 	 0.0%
+Correct for file: eq13_hr.jpg 	 0\5 	 0.0%
+Correct for file: eq14_hr.jpg 	 3\4 	 75.0%
+Correct for file: eq1_hr.jpg 	 7\7 	 100.0%
+Correct for file: eq2_hr.jpg 	 6\7 	 85.7%
+Correct for file: eq5_hr.jpg 	 8\8 	 100.0%
+Correct for file: eq6_hr.jpg 	 10\11 	 90.9%
+Correct for file: eq7_hr.jpg 	 16\19 	 84.2%
+Correct for file: eq8_hr.jpg 	 11\15 	 73.3%
+Correct for file: eq9_hr.jpg 	 12\13 	 92.3%
+
+Total Correct : eq9_hr.jpg 	 113\140 	 80.7%
+
+Perfect Images Rot 10deg, exclude 3, 12, 11, 13:
+Correct for file: demo_equation_hr.jpg 	 21\22 	 95.5%
+Correct for file: eq10-2_hr.jpg 	 10\13 	 76.9%
+Correct for file: eq10_hr.jpg 	 9\11 	 81.8%
+Correct for file: eq14_hr.jpg 	 3\4 	 75.0%
+Correct for file: eq1_hr.jpg 	 7\7 	 100.0%
+Correct for file: eq2_hr.jpg 	 6\7 	 85.7%
+Correct for file: eq5_hr.jpg 	 8\8 	 100.0%
+Correct for file: eq6_hr.jpg 	 10\11 	 90.9%
+Correct for file: eq7_hr.jpg 	 16\19 	 84.2%
+Correct for file: eq8_hr.jpg 	 11\15 	 73.3%
+Correct for file: eq9_hr.jpg 	 12\13 	 92.3%
+
+Total Correct : eq9_hr.jpg 	 113\130 	 86.9%
+
+9 REAL images (lighting and skew):
+Correct for file: demo_equation_hr.jpg 	 18\22 	 81.8%
+Correct for file: eq1_hr.jpg 	 7\7 	 100.0%
+Correct for file: eq2_hr.jpg 	 6\7 	 85.7%
+Correct for file: eq3_hr.jpg 	 0\9 	 0.0%
+Correct for file: eq5_hr.jpg 	 6\8 	 75.0%
+Correct for file: eq6_hr.jpg 	 9\11 	 81.8%
+Correct for file: eq7_hr.jpg 	 5\18 	 27.8%
+Correct for file: eq8_hr.jpg 	 5\15 	 33.3%
+Correct for file: eq9_hr.jpg 	 7\13 	 53.8%
+
+Total Correct : eq9_hr.jpg 	 63\110 	 57.3%
+
+
+
+New Deskew, Closing smoothing (size 5), Real images (higher res for eq6-9)
+Correct for file: demo_equation_hr.jpg 	 19\22 	 86.4%
+Correct for file: eq10-2_hr.jpg 	 11\13 	 84.6%
+Correct for file: eq1_hr.jpg 	 1\7 	 14.3%
+Correct for file: eq2_hr.jpg 	 3\7 	 42.9%
+Correct for file: eq3_hr.jpg 	 6\9 	 66.7%
+Correct for file: eq5_hr.jpg 	 4\8 	 50.0%
+Correct for file: eq6_hr.jpg 	 8\11 	 72.7%
+Correct for file: eq7_hr.jpg 	 15\19 	 78.9%
+Correct for file: eq8_hr.jpg 	 11\15 	 73.3%
+Correct for file: eq9_hr.jpg 	 12\12 	 100.0%
+
+Total Correct: 	 90\123 	 73.2%
+
+
+Old Deskew, Closing smoothing (size 5), Real images (higher res for eq6-9)
+Correct for file: demo_equation_hr.jpg 	 19\22 	 86.4%
+Correct for file: eq10-2_hr.jpg 	 11\13 	 84.6%
+Correct for file: eq1_hr.jpg 	 6\7 	 85.7%
+Correct for file: eq2_hr.jpg 	 6\7 	 85.7%
+Correct for file: eq3_hr.jpg 	 0\9 	 0.0%
+Correct for file: eq5_hr.jpg 	 6\8 	 75.0%
+Correct for file: eq6_hr.jpg 	 8\11 	 72.7%
+Correct for file: eq7_hr.jpg 	 15\19 	 78.9%
+Correct for file: eq8_hr.jpg 	 13\15 	 86.7%
+Correct for file: eq9_hr.jpg 	 12\12 	 100.0%
+
+Total Correct: 	 96\123 	 78.0%
+
+83% when combining best of previous two deskilling methods
+
+New Deskew ON, perfect images (eq5 gets skewed a little, but better than old desk)
+Correct for file: demo_equation_hr.jpg 	 20\22 	 90.9%
+Correct for file: eq10-2_hr.jpg 	 12\13 	 92.3%
+Correct for file: eq10_hr.jpg 	 10\11 	 90.9%
+Correct for file: eq11_hr.jpg 	 5\5 	 100.0%
+Correct for file: eq12_hr.jpg 	 8\8 	 100.0%
+Correct for file: eq13_hr.jpg 	 4\5 	 80.0%
+Correct for file: eq14_hr.jpg 	 4\4 	 100.0%
+Correct for file: eq1_hr.jpg 	 7\7 	 100.0%
+Correct for file: eq2_hr.jpg 	 7\7 	 100.0%
+Correct for file: eq3_hr.jpg 	 9\9 	 100.0%
+Correct for file: eq5_hr.jpg 	 5\8 	 62.5%
+Correct for file: eq6_hr.jpg 	 11\11 	 100.0%
+Correct for file: eq7_hr.jpg 	 19\19 	 100.0%
+Correct for file: eq8_hr.jpg 	 15\15 	 100.0%
+Correct for file: eq9_hr.jpg 	 11\13 	 84.6%
+
+Total Correct : 	 147\157 	 93.6%

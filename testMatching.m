@@ -237,7 +237,7 @@ for i = 1:length(row)
 end
 
 %% Test with input equation
-dir = strcat(pwd,'/LaTeX Equations');
+directory = strcat(pwd,'/Lighting');
 % dir = strcat(pwd,'/Lighting');
 % eq = im2double(rgb2gray(imread(strcat(dir,'/eq7_hr.jpg'))));
 % th = graythresh(eq);
@@ -248,10 +248,18 @@ dir = strcat(pwd,'/LaTeX Equations');
 % eq_rot = imrotate(ones(size(eq))-eq,15);
 % eq = ones(size(eq_rot)) - eq_rot;_test_lightin
 
-eq = imread(strcat(dir,'/eq14_hr.jpg'));
+eq = imread(strcat(directory,'/eq8_hr.jpg'));
+
+% ang = 20;
+% mask = true(size(eq(:,:,1)));
+% mask_rot = imrotate(mask,ang);
+% mask_rot = imerode(mask_rot,ones(4,4));
+% eq = imrotate(eq,ang,'bilinear');
+% eq(~repmat(mask_rot,1,1,3)) = 255;
+
 eq_bin = fn_lighting_compensation(eq);
-% [eq_deskew, ~] = fn_deskew2(eq_bin,true,true,3);
-% eq_bin = eq_deskew;
+[eq_deskew, ~] = fn_deskew2(eq_bin,true);
+eq_bin = eq_deskew;
 figure(1);
 imshow(eq_bin);
 
