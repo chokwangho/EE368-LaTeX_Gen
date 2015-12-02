@@ -1,0 +1,1 @@
+matlab -nosplash -nodesktop -minimize -r "run('E:\Github\EE368-LaTeX_Gen\Demo\demo_latex_gen.m')"

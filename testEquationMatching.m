@@ -5,8 +5,8 @@
 %% Test full matching process against 8 test equation pictures. Export PDF
 % of matched characters, count how many matched and weren't matched
 
-% load('red_charPalette_withText_demo2.mat');
-% load('red_charPalette_Classifier_demo2.mat');
+load('red_charPalette_withText_demo2.mat');
+load('red_charPalette_Classifier_demo2.mat');
 load('equation_truth_mod.mat');
 
 % Get file names of images to modify to test
