@@ -72,6 +72,18 @@ end
 y = size(char,1);
 x = size(char,2);
 dr = max(max(x - cent_x,cent_x), max(y - cent_y,cent_y)) / (k+1);
+% new_side = round(2 * (k + 1) * dr);
+% top_pad = round((new_side - y) / 2);
+% side_pad = round((new_side - x) / 2);
+% char = padarray(char,[top_pad side_pad],1);
+% % recalc size and centroid
+% y = size(char,1);
+% x = size(char,2);
+% char_inv = ones(size(char)) - char;
+% cent = regionprops(char_inv,'centroid');
+% cent = cat(1, cent.Centroid);
+% cent_x = cent(1);
+% cent_y = cent(2);
 [c, r] = meshgrid(1:x, 1:y);
 
 % Display Extracted circles

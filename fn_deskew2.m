@@ -27,9 +27,9 @@ edges = edge(bw_img);
 
 %% Previous Implementation
 % P = houghpeaks(H,1);
-
+% 
 % deskewing_angle = T(P(1,2))-90;
-
+% 
 % while(-deskewing_angle > 40)
 %     deskewing_angle = deskewing_angle + 180;
 % end
