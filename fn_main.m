@@ -34,21 +34,21 @@ if(showFigs)
 end
 
 %% Optimize page and binarize
-% eq_bin = fn_lighting_compensation(eq);
-% if(showFigs)
-%     figure(2);
-%     imshow(eq_bin);
-% end
-% 
-% [eq_deskew, ~] = fn_deskew2(eq_bin,true,true, 5);
+eq_bin = fn_lighting_compensation(eq);
+if(showFigs)
+    figure(2);
+    imshow(eq_bin);
+end
 
-eq = im2double(rgb2gray(eq));
-th = graythresh(eq);
-eq_bin = eq;
-eq_bin(eq <= th) = 0;
-eq_bin(eq > th) = 1;
-eq_deskew = eq_bin;
-disp(th);
+[eq_deskew, ~] = fn_deskew2(eq_bin,true,true, 5);
+
+% eq = im2double(rgb2gray(eq));
+% th = graythresh(eq);
+% eq_bin = eq;
+% eq_bin(eq <= th) = 0;
+% eq_bin(eq > th) = 1;
+% eq_deskew = eq_bin;
+% disp(th);
 
 if(showFigs)
     figure(3);

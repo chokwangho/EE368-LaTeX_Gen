@@ -37,14 +37,17 @@ edges = edge(bw_img);
 %% Current Implementation
 P = houghpeaks(H,4);
 
-dominant_orientation = mode(P(:,2));
-if length(dominant_orientation) > 1
-    dominant_orientation = dominant_orientation(1);
+orientations = P(:,2);
+if length(unique(orientations)) == 4    
+    dominant_orientation = orientations(1);
+else
+    dominant_orientation = mode(P(:,2));
 end
+
 deskewing_angle = T(dominant_orientation)-90;
 
-
-while(abs(deskewing_angle) > 40)
+% Limit angle  to -45  to 45
+while(abs(deskewing_angle) > 45)
     deskewing_angle = deskewing_angle - sign(deskewing_angle)*90;
 end
 
