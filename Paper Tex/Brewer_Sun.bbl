@@ -21,15 +21,21 @@
 \providecommand{\BIBdecl}{\relax}
 \BIBdecl
 
+\bibitem{PhotoMath:photomath}
+\BIBentryALTinterwordspacing
+Microblink. (2015, Nov.) Photomath. [Online]. Available:
+  \url{https://photomath.net/en/}
+\BIBentrySTDinterwordspacing
+
 \bibitem{Naqvi:article_typical}
 \BIBentryALTinterwordspacing
-U.~S. Salman~Naqvi. (2015, Nov.) Ee368/cs232 digital image processing. course
-  project. [Online]. Available:
+S.~Naqvi and U.~Sikora. (2015, Nov.) Ee368/cs232 digital image processing.
+  course project. [Online]. Available:
   \url{http://web.stanford.edu/class/ee368/Project\_13/index.html}
 \BIBentrySTDinterwordspacing
 
 \bibitem{Pradhan:article_typical}
-A.~P. A.~Pradhan, M.P.~Pradhan, ``An approach for reducing morphological
+A.~Pradhan, M.~Pradhan, and A.~Prasad, ``An approach for reducing morphological
   operator dataset and recognize optical character based on significant
   features,'' in \emph{Advances in Computing, Communications and Informatics
   (ICACCI), 2015 International Conference on}, vol.~2, Aug. 2015, pp.
@@ -41,10 +47,10 @@ B.~Potocnik, ``Visual pattern recognition by moment invariants,'' in
   Symposium ELMAR-2006 focused on}, Jun. 2006, pp. 27--32.
 
 \bibitem{Torres-Mendez:article_typical}
-L.~S. G.~G. L.A. Torres-Mendez, J.C. Ruiz-Suarez, ``Translation, rotation, and
-  scale-invariant object recognition,'' \emph{Systems, Man, and Cybernetics,
-  Part C: Applications and Reviews, IEEE Transactions on}, vol.~30, pp.
-  125--130, Feb. 2000.
+L.~Torres-Mendez, J.~Ruiz-Suarez, L.~Sucar, and G.~Gomez, ``Translation,
+  rotation, and scale-invariant object recognition,'' \emph{Systems, Man, and
+  Cybernetics, Part C: Applications and Reviews, IEEE Transactions on},
+  vol.~30, pp. 125--130, Feb. 2000.
 
 \bibitem{Muralidharan:article_typical}
 \BIBentryALTinterwordspacing
@@ -57,7 +63,7 @@ M.~K. Hu, ``Visual pattern recognition by moment invariants,'' \emph{IRE Trans.
   Info. Theory}, vol. IT-8, pp. 179--187, 1962.
 
 \bibitem{Kaur:article_typical}
-S.~J. Mandip~Kaur, ``An integrated skew detection and correction using fast
+M.~Kaur and S.~Jindal, ``An integrated skew detection and correction using fast
   fourier transform and dct,'' \emph{International Journal of Scientific \&
   Technology Res}, vol.~2, Dec. 2013.
 

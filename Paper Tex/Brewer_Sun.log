@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2015.9.25)  4 DEC 2015 02:22
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2015.9.25)  4 DEC 2015 13:31
 entering extended mode
 **Brewer_Sun.tex
 (Brewer_Sun.tex
@@ -313,11 +313,14 @@ Missing character: There is no ‚ in font ptmb7t!
 Missing character: There is no Ä in font ptmb7t!
 Missing character: There is no ù in font ptmb7t!
 
-Underfull \hbox (badness 2012) in paragraph at lines 151--152
+Underfull \hbox (badness 2012) in paragraph at lines 153--154
  \OT1/ptm/m/it/10 1) Smart-phone Pho-tographs: [][] \OT1/ptm/m/n/10 Pho-tograph
 s taken by a
  []
 
+Missing character: There is no ‚ in font ptmr7t!
+Missing character: There is no Ä in font ptmr7t!
+Missing character: There is no ô in font ptmr7t!
 [1{C:/ProgramData/MiKTeX/2.9/pdftex/config/pdftex.map}
 
 
@@ -325,49 +328,38 @@ s taken by a
 Missing character: There is no ‚ in font ptmr7t!
 Missing character: There is no Ä in font ptmr7t!
 Missing character: There is no ô in font ptmr7t!
-Missing character: There is no ‚ in font ptmr7t!
-Missing character: There is no Ä in font ptmr7t!
-Missing character: There is no ô in font ptmr7t!
 
-<Images/fig1.jpg, id=10, 252.945pt x 99.5355pt>
+<Images/fig1.jpg, id=12, 252.945pt x 99.5355pt>
 File: Images/fig1.jpg Graphic file (type jpg)
  <use Images/fig1.jpg>
-Package pdftex.def Info: Images/fig1.jpg used on input line 165.
+Package pdftex.def Info: Images/fig1.jpg used on input line 167.
 (pdftex.def)             Requested size: 252.0pt x 99.16617pt.
 
-<Images/fig2.jpg, id=11, 470.0835pt x 263.7855pt>
+<Images/fig2.jpg, id=13, 470.0835pt x 263.7855pt>
 File: Images/fig2.jpg Graphic file (type jpg)
  <use Images/fig2.jpg>
-Package pdftex.def Info: Images/fig2.jpg used on input line 174.
+Package pdftex.def Info: Images/fig2.jpg used on input line 176.
 (pdftex.def)             Requested size: 252.0pt x 141.40761pt.
-Missing character: There is no Œ in font ptmr7t!
-Missing character: There is no ∏ in font ptmr7t!
-Missing character: There is no œ in font ptmr7t!
-Missing character: There is no Å in font ptmr7t!
-Missing character: There is no · in font ptmr7t!
-Missing character: There is no µ in font ptmr7t!
-Missing character: There is no í in font ptmr7t!
 
-<Images/fig3.jpg, id=12, 717.43031pt x 512.66531pt>
+<Images/fig3.jpg, id=14, 717.43031pt x 512.66531pt>
 File: Images/fig3.jpg Graphic file (type jpg)
  <use Images/fig3.jpg>
-Package pdftex.def Info: Images/fig3.jpg used on input line 185.
+Package pdftex.def Info: Images/fig3.jpg used on input line 187.
 (pdftex.def)             Requested size: 252.0pt x 180.077pt.
 
-[2 <./Images/fig1.jpg> <./Images/fig2.jpg> <./Images/fig3.jpg>]
-<Images/B.jpg, id=18, 109.1578pt x 109.91063pt>
+<Images/B.jpg, id=15, 109.1578pt x 109.91063pt>
 File: Images/B.jpg Graphic file (type jpg)
  <use Images/B.jpg>
-Package pdftex.def Info: Images/B.jpg used on input line 196.
+Package pdftex.def Info: Images/B.jpg used on input line 198.
 (pdftex.def)             Requested size: 109.15753pt x 109.91034pt.
 Missing character: There is no ‚ in font ptmr7t!
 Missing character: There is no Ä in font ptmr7t!
 Missing character: There is no ô in font ptmr7t!
-
-<Images/seg_eq.jpg, id=19, 1354.3097pt x 633.11531pt>
+ [2 <./Images/fig1.jpg> <./Images/fig2.jpg> <./Images/fig3.jpg>]
+<Images/seg_eq.jpg, id=20, 1354.3097pt x 633.11531pt>
 File: Images/seg_eq.jpg Graphic file (type jpg)
  <use Images/seg_eq.jpg>
-Package pdftex.def Info: Images/seg_eq.jpg used on input line 205.
+Package pdftex.def Info: Images/seg_eq.jpg used on input line 207.
 (pdftex.def)             Requested size: 252.0pt x 117.80074pt.
 Missing character: There is no ‚ in font ptmr7t!
 Missing character: There is no Ä in font ptmr7t!
@@ -376,28 +368,41 @@ Missing character: There is no ‚ in font ptmr7t!
 Missing character: There is no Ä in font ptmr7t!
 Missing character: There is no ô in font ptmr7t!
 
-<Images/pi_hu.jpg, id=20, 650.43pt x 633.11531pt>
+<Images/pi_hu.jpg, id=21, 650.43pt x 633.11531pt>
 File: Images/pi_hu.jpg Graphic file (type jpg)
  <use Images/pi_hu.jpg>
-Package pdftex.def Info: Images/pi_hu.jpg used on input line 229.
+Package pdftex.def Info: Images/pi_hu.jpg used on input line 231.
 (pdftex.def)             Requested size: 252.0pt x 245.291pt.
 
-Underfull \vbox (badness 1412) has occurred while \output is active []
+Underfull \hbox (badness 1953) in paragraph at lines 247--262
+[]\OT1/ptm/m/n/10 Finally, we cal-cu-late the Hu In-vari-ant Mo-ments [6].
+ []
 
- [3 <./Images/B.jpg> <./Images/seg_eq.jpg> <./Images/pi_hu.jpg>]
+
+Underfull \hbox (badness 1990) in paragraph at lines 247--262
+\OT1/ptm/m/n/10 ing, and ro-ta-tion [7]. The first Hu Mo-ment is es-sen-
+ []
+
+
+Underfull \hbox (badness 2884) in paragraph at lines 247--262
+\OT1/ptm/m/n/10 tially the nor-mal-ized cen-tral mo-ment of in-er-tia pre-vi-
+ []
+
+
+Underfull \hbox (badness 2837) in paragraph at lines 247--262
+\OT1/ptm/m/n/10 With $\OML/cmm/m/it/10 []$ \OT1/ptm/m/n/10 as the cen-tral mo-
+ment of or-der $\OML/cmm/m/it/10 p$ \OT1/ptm/m/n/10 and $\OML/cmm/m/it/10 q$\OT
+1/ptm/m/n/10 :
+ []
+
+[3 <./Images/B.jpg> <./Images/seg_eq.jpg> <./Images/pi_hu.jpg>]
 <Images/palette.jpg, id=30, 275.6115pt x 181.332pt>
 File: Images/palette.jpg Graphic file (type jpg)
  <use Images/palette.jpg>
-Package pdftex.def Info: Images/palette.jpg used on input line 267.
+Package pdftex.def Info: Images/palette.jpg used on input line 270.
 (pdftex.def)             Requested size: 252.0pt x 165.79816pt.
 Missing character: There is no ‚ in font ptmr7t!
 Missing character: There is no Ä in font ptmr7t!
-Missing character: There is no ú in font ptmr7t!
-Missing character: There is no ‚ in font ptmr7t!
-Missing character: There is no Ä in font ptmr7t!
-Missing character: There is no ù in font ptmr7t!
-Missing character: There is no ‚ in font ptmr7t!
-Missing character: There is no Ä in font ptmr7t!
 Missing character: There is no ô in font ptmr7t!
 Missing character: There is no ‚ in font ptmr7t!
 Missing character: There is no Ä in font ptmr7t!
@@ -438,50 +443,23 @@ Missing character: There is no ô in font ptmr7t!
 Missing character: There is no ‚ in font ptmr7t!
 Missing character: There is no Ä in font ptmr7t!
 Missing character: There is no ô in font ptmr7t!
-Missing character: There is no ‚ in font ptmr7t!
-Missing character: There is no Ä in font ptmr7t!
-Missing character: There is no ô in font ptmr7t!
-Missing character: There is no ‚ in font ptmr7t!
-Missing character: There is no Ä in font ptmr7t!
-Missing character: There is no ô in font ptmr7t!
-
-Underfull \hbox (badness 10000) in paragraph at lines 312--312
-[]|\OT1/ptm/m/n/10 11.529060
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 312--312
-[]|\OT1/ptm/m/n/10 11.232951
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 312--312
-[]|\OT1/ptm/m/n/10 23.221652
- []
-
-
-Overfull \hbox (10.0pt too wide) in paragraph at lines 302--314
-[]$[]$ 
- []
 
 <Images/clean.jpg, id=31, 203.9985pt x 60.444pt>
 File: Images/clean.jpg Graphic file (type jpg)
  <use Images/clean.jpg>
-Package pdftex.def Info: Images/clean.jpg used on input line 317.
+Package pdftex.def Info: Images/clean.jpg used on input line 321.
 (pdftex.def)             Requested size: 252.0pt x 74.67123pt.
 
-Underfull \vbox (badness 1057) has occurred while \output is active []
-
- [4 <./Images/palette.jpg>]
+[4 <./Images/palette.jpg>]
 <Images/deskew_results_graph.jpg, id=35, 1074.26344pt x 756.57657pt>
 File: Images/deskew_results_graph.jpg Graphic file (type jpg)
 
 <use Images/deskew_results_graph.jpg>
-Package pdftex.def Info: Images/deskew_results_graph.jpg used on input line 329
+Package pdftex.def Info: Images/deskew_results_graph.jpg used on input line 333
 .
 (pdftex.def)             Requested size: 252.0pt x 177.47227pt.
 
-Overfull \hbox (10.0pt too wide) in paragraph at lines 336--353
+Overfull \hbox (10.0pt too wide) in paragraph at lines 340--357
 []$[]$ 
  []
 
@@ -495,13 +473,13 @@ Missing character: There is no ù in font ptmr7t!
 File: Images/rotation_robust.jpg Graphic file (type jpg)
 
 <use Images/rotation_robust.jpg>
-Package pdftex.def Info: Images/rotation_robust.jpg used on input line 359.
+Package pdftex.def Info: Images/rotation_robust.jpg used on input line 363.
 (pdftex.def)             Requested size: 252.0pt x 194.6155pt.
 
 <Images/test_img.jpg, id=37, 338.355pt x 225.6795pt>
 File: Images/test_img.jpg Graphic file (type jpg)
  <use Images/test_img.jpg>
-Package pdftex.def Info: Images/test_img.jpg used on input line 370.
+Package pdftex.def Info: Images/test_img.jpg used on input line 374.
 (pdftex.def)             Requested size: 252.0pt x 168.08493pt.
 Missing character: There is no ‚ in font ptmr7t!
 Missing character: There is no Ä in font ptmr7t!
@@ -511,7 +489,7 @@ Missing character: There is no Ä in font ptmr7t!
 Missing character: There is no ù in font ptmr7t!
 
 [5 <./Images/clean.jpg> <./Images/deskew_results_graph.jpg> <./Images/rotation_
-robust.jpg>]
+robust.jpg> <./Images/test_img.jpg>]
 Missing character: There is no ‚ in font ptmr7t!
 Missing character: There is no Ä in font ptmr7t!
 Missing character: There is no ú in font ptmr7t!
@@ -524,29 +502,29 @@ Missing character: There is no ú in font ptmr7t!
 Missing character: There is no ‚ in font ptmr7t!
 Missing character: There is no Ä in font ptmr7t!
 Missing character: There is no ù in font ptmr7t!
- (Brewer_Sun.bbl) [6 <./Images/test_img.jpg>] (Brewer_Sun.aux) ) 
+ (Brewer_Sun.bbl) [6] (Brewer_Sun.aux) ) 
 Here is how much of TeX's memory you used:
- 3975 strings out of 493698
- 62580 string characters out of 3144412
- 132126 words of memory out of 3000000
- 7268 multiletter control sequences out of 15000+200000
+ 3976 strings out of 493698
+ 62601 string characters out of 3144412
+ 132129 words of memory out of 3000000
+ 7269 multiletter control sequences out of 15000+200000
  45938 words of font info for 92 fonts, out of 3000000 for 9000
  1028 hyphenation exceptions out of 8191
- 36i,10n,38p,1278b,259s stack positions out of 5000i,500n,10000p,200000b,50000s
-{C:/Program Fil
-es/MiKTeX 2.9/fonts/enc/dvips/fontname/8r.enc}<C:/Program Files/MiKTeX 2.9/font
-s/type1/public/amsfonts/cmextra/cmex7.pfb><C:/Program Files/MiKTeX 2.9/fonts/ty
-pe1/public/amsfonts/cm/cmmi10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/publ
-ic/amsfonts/cm/cmmi5.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfon
-ts/cm/cmmi7.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr
-10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr5.pfb><C:
-/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Program F
-iles/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Files/MiK
-TeX 2.9/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Program Files/MiKTeX 2.9/f
-onts/type1/urw/times/utmb8a.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/ti
-mes/utmbi8a.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/times/utmr8a.pfb><
-C:/Program Files/MiKTeX 2.9/fonts/type1/urw/times/utmri8a.pfb>
-Output written on Brewer_Sun.pdf (6 pages, 761578 bytes).
+ 36i,10n,38p,964b,261s stack positions out of 5000i,500n,10000p,200000b,50000s
+{C:/Program Files/MiKTeX 2.9/fonts/enc/
+dvips/fontname/8r.enc}<C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/
+cmextra/cmex7.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/c
+mmi10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi5.pfb
+><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Prog
+ram Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Program Files
+/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr5.pfb><C:/Program Files/MiKTeX 2.
+9/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Program Files/MiKTeX 2.9/fonts/ty
+pe1/public/amsfonts/cm/cmsy10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/publ
+ic/amsfonts/cm/cmsy7.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/times/utm
+b8a.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/times/utmbi8a.pfb><C:/Prog
+ram Files/MiKTeX 2.9/fonts/type1/urw/times/utmr8a.pfb><C:/Program Files/MiKTeX 
+2.9/fonts/type1/urw/times/utmri8a.pfb>
+Output written on Brewer_Sun.pdf (6 pages, 764602 bytes).
 PDF statistics:
  85 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
