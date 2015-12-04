@@ -1,13 +1,23 @@
 function eq_string = fn_assemble_eq( EqStruct )
-%AssembleEquation Assembles an equation given a struct of extracted
-%character information
+%AssembleEquation Assembles a string representation of an equation given a
+% struct of extracted character information. The output eq_string will be
+% in LaTeX form.
 %   Input: EquationStruct is a struct returned from the fn_segment
-%   function. The struct will contain the following fields:
-%       centroid - The centroid of the
+%   function. The struct will conatain 2 fields:
+%       filename    - The name of the image with the equation. Not currently 
+%                       used in this algorithm
+%       characters  - A struct array, with each struct representing a
+%                       segmented and recognized character.
+%   Within the structs in the characters struct array are the following 
+%   fileds:
+%       centroid    - The centroid of the character
+%       boundingbox - the bounding box of the character
+%       img         - The image of the segmented character region. Not
+%                       currently used in this algorithm
+%       char        - The recognized LaTeX character.
 
 % Create control sequence recognition tables
 control = help_create_control;
-
 limit_control = {'int','sum','prod','lim'}; % Controls that can have the \limits modifier
 
 % Set white space threshold in pixels for letters
@@ -212,7 +222,7 @@ while i <= num_chars
                 if i+1 <= num_chars && help_is_letter(detected) && help_is_letter(chars(i+1).char)
                     dist_to_next = boxes(1,i+1)-ur_x_coord;
                     if dist_to_next >= space
-                        detected = [detected ' '];
+                        detected = [detected '\,'];
                     end
                 end
                 eq_string = [eq_string detected];
@@ -359,7 +369,7 @@ end
 % Insert space if needed between letters
 if ~isnan(dist_to_next) && help_is_letter(detected) && help_is_letter(chars(index+1).char)
     if dist_to_next >= space
-        detected = [detected ' '];
+        detected = [detected '\,'];
     end
 end
 tex_char = detected;
