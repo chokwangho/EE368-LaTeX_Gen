@@ -1,6 +1,8 @@
 function [ deskew_img ] = fn_deskew( bw_img )
-%FN_DESKEW Deskews a binary image of an equation and returns.
-%   Detailed explanation goes here
+%FN_DESKEW NOT FOR USE. USE fn_deskew2 instead.Attempts to implement a fast
+%skew detection algorithm using the frequency space. Results are promising 
+%but not good enough to supplant Hough transform method.
+
 
 F=fft2(bw_img);
 [H,W] = size(F);

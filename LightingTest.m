@@ -1,3 +1,6 @@
+% Tests fn_lighting_compensation. Expects equation photographs to be in the
+% "Lighting" directory.
+
 lighting_dir = 'Lighting\';
 results_dir = [lighting_dir 'Results\'];
 listing = dir(lighting_dir);

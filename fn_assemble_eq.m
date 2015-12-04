@@ -4,11 +4,11 @@ function eq_string = fn_assemble_eq( EqStruct )
 % in LaTeX form.
 %   Input: EquationStruct is a struct returned from the fn_segment
 %   function. The struct will conatain 2 fields:
-%       filename    - The name of the image with the equation. Not currently 
+%       filename    - The name of the image with the equation. Not currently
 %                       used in this algorithm
 %       characters  - A struct array, with each struct representing a
 %                       segmented and recognized character.
-%   Within the structs in the characters struct array are the following 
+%   Within the structs in the characters struct array are the following
 %   fileds:
 %       centroid    - The centroid of the character
 %       boundingbox - the bounding box of the character
@@ -20,17 +20,22 @@ function eq_string = fn_assemble_eq( EqStruct )
 control = help_create_control;
 limit_control = {'int','sum','prod','lim'}; % Controls that can have the \limits modifier
 
-% Set white space threshold in pixels for letters
+% Set white space threshold in pixels for letters to know when to enter a
+% thin space.
 space = 10;
 
+% Initialize the eq_string
 eq_string = '';
+
+% Extract the character array.
 chars = EqStruct.characters;
 num_chars = length(chars);
+
+
+% Get boundingbox info
 % Bounding boxes format:
 % Upper left x, Upper left y, width, height
 boxes = zeros(4,num_chars);
-
-% Get boundingbox info
 for i = 1:num_chars
     boxes(:,i) = chars(i).boundingbox;
 end
@@ -47,12 +52,12 @@ if length(chars) ~= num_chars
     boxes = zeros(4,num_chars);
     for i = 1:num_chars
         boxes(:,i) = chars(i).boundingbox;
-    end    
+    end
 end
 
 % variables for super/subscript checks
 prev_centroid_y_coord = NaN;
-prev_fraction = false; % Don't check for exponents if previously saw a fraction
+prev_fraction = false; % Don't check for exponents if previously saw a fraction. Fractional exponents will be handled recursively
 is_super = false; % Flag to know when we are in an exponent
 is_sub = false; % Flag for subscript
 
@@ -61,6 +66,7 @@ i = 1;
 while i <= num_chars
     detected = chars(i).char;
     
+    %% Check for overlaps
     ul_x_coord = boxes(1,i);
     ur_x_coord = ul_x_coord+boxes(3,i);
     
@@ -100,59 +106,56 @@ while i <= num_chars
     overlap_idx(i) = false;
     num_overlaps = sum(overlap_idx);
     
-    % special case if sqrt
+    %% Start the assembly
+    %% special case if sqrt
     if strcmp(detected,'sqrt')
         sqrt_chars = chars(overlap_idx);
         sqrt_eq_struct.fname = '';
         sqrt_eq_struct.characters = sqrt_chars;
         sqrt_str = fn_assemble_eq(sqrt_eq_struct);
-        eq_string = [eq_string '\sqrt{' sqrt_str '}'];
+        eq_string = [eq_string '\sqrt{' sqrt_str '}']; %#ok<*AGROW>
         i = i+num_overlaps+1;
         continue
     end
     
+    %% Special cases depending on number of overlaps
     switch num_overlaps
         case 0
-            
             % Check for super and sub scripts by comparing lower left with
             % stored centroid_height, unless previous character was a fraction
             if i-1 > 0 && ~prev_fraction
                 ll_corner = boxes(2,i)+boxes(4,i);
                 ul_corner = boxes(2,i);
                 
-                if ll_corner <= ceil(prev_centroid_y_coord) % && total_height<= script_perc*eqn_height
-                   % Check to see if this was a '-'. If so, it
-                   %  should be pretty high in order to be an exponent
-                   if ~strcmp(detected,'-') || ll_corner < (prev_centroid_y_coord-5*boxes(4,i))
-                       % Superscript
-                       %                     super_eq_struct.filename = '';
-                       %                     super_eq_struct.characters = chars(i);
-                       %                     super_str = fn_assemble_eq(super_eq_struct);
-                       %                     detected = ['^{' super_str '}'];
-                       % Remove trailing white space, append the superscript
-                       % control sequence
-                       is_super = true;
-                       eq_string = [strtrim(eq_string) '^{'];
-                       
-                       % Store centroid to check for exponents
-                       prev_centroid_y_coord = chars(i).centroid(2);
-                       
-                       if i+1<= num_chars
-                           dist_to_next = boxes(1,i+1)-ur_x_coord;
-                       else
-                           dist_to_next = NaN;
-                       end
-                       detected = help_get_char(detected,i,chars,dist_to_next);
-                   end
-                elseif ul_corner >= floor(prev_centroid_y_coord) % && total_height<= script_perc*eqn_height
+                if ll_corner <= ceil(prev_centroid_y_coord)
+                    % Check to see if this was a '-'. If so, it
+                    %  should be pretty high in order to be an exponent
+                    if ~strcmp(detected,'-') || ll_corner < (prev_centroid_y_coord-5*boxes(4,i))
+                        % Remove trailing white space, append the superscript
+                        % control sequence
+                        is_super = true;
+                        eq_string = [strtrim(eq_string) '^{'];
+                        
+                        % Store centroid to check for nested exponents
+                        prev_centroid_y_coord = chars(i).centroid(2);
+                        
+                        if i+1<= num_chars
+                            dist_to_next = boxes(1,i+1)-ur_x_coord;
+                        else
+                            dist_to_next = NaN;
+                        end
+                        % determine how detected is represented in LaTeX
+                        detected = help_get_char(detected,i,chars,dist_to_next);
+                    end
+                elseif ul_corner >= floor(prev_centroid_y_coord)
                     if is_super
                         is_super = false;
                         % End of exponent
                         eq_string = [strtrim(eq_string) '}'];
                         prev_fraction = false;
-                    
+                        
                         % Store centroid to check for exponents
-                        prev_centroid_y_coord = chars(i).centroid(2);  
+                        prev_centroid_y_coord = chars(i).centroid(2);
                         
                         if i+1<= num_chars
                             dist_to_next = boxes(1,i+1)-ur_x_coord;
@@ -163,9 +166,6 @@ while i <= num_chars
                     else
                         % Subscript
                         is_sub = true;
-                        %                         sub_eq_struct.filename = '';
-                        %                         sub_eq_struct.characters = chars(i);
-                        %                         sub_str = fn_assemble_eq(sub_eq_struct);
                         eq_string = [strtrim(eq_string) '_{'];
                         
                         if i+1<= num_chars
@@ -174,16 +174,16 @@ while i <= num_chars
                             dist_to_next = NaN;
                         end
                         detected = help_get_char(detected,i,chars,dist_to_next);
-                    
+                        
                         % Store centroid to check for exponents
-                        prev_centroid_y_coord = chars(i).centroid(2);  
+                        prev_centroid_y_coord = chars(i).centroid(2);
                     end
                 else
                     % Normal op
                     prev_fraction = false;
                     
                     % Store centroid to check for exponents
-                    prev_centroid_y_coord = chars(i).centroid(2);  
+                    prev_centroid_y_coord = chars(i).centroid(2);
                     
                     if i+1<= num_chars
                         dist_to_next = boxes(1,i+1)-ur_x_coord;
@@ -197,7 +197,7 @@ while i <= num_chars
                 prev_fraction = false;
                 
                 % Store centroid to check for exponents
-                prev_centroid_y_coord = chars(i).centroid(2);  
+                prev_centroid_y_coord = chars(i).centroid(2);
                 
                 if i+1<= num_chars
                     dist_to_next = boxes(1,i+1)-ur_x_coord;
@@ -228,16 +228,16 @@ while i <= num_chars
                 eq_string = [eq_string detected];
                 
                 % Store centroid to check for exponents
-                prev_centroid_y_coord = chars(i).centroid(2); 
+                prev_centroid_y_coord = chars(i).centroid(2);
             else
-                
                 overlap_char = chars(i+1).char;
                 % Manually check for cases
+                % If just a two '-', it is an equals
                 if strcmp(detected,'-') && strcmp(overlap_char,'-')
                     eq_string = [eq_string '='];
                     
                     % Store average y_coord between the 2 equal bars
-                    prev_centroid_y_coord = 1/2*(chars(i).centroid(2)+chars(i+1).centroid(2));  
+                    prev_centroid_y_coord = 1/2*(chars(i).centroid(2)+chars(i+1).centroid(2));
                 end
                 i = i+1; % Skip next char
             end
@@ -249,7 +249,6 @@ while i <= num_chars
             overlap_centroids = zeros(2,length(overlap_chars));
             overlap_boxes = zeros(4,length(overlap_chars));
             bar_idx = [];
-%             bar_height = [];
             bar_width = [];
             limit_idx = [];
             limit_height = [];
@@ -289,7 +288,7 @@ while i <= num_chars
                 end
                 
                 % Store frac_bar centroid y for super/subscript checks
-                prev_centroid_y_coord = frac_y_coord;  
+                prev_centroid_y_coord = frac_y_coord;
                 
                 % Get the numerator and denominator characters by comparing
                 % centroid to the frac bar y coord.
@@ -303,6 +302,7 @@ while i <= num_chars
                 denom_eq_struct.filename = '';
                 denom_eq_struct.characters = overlap_chars(denom_idx);
                 
+                % Get subequation string
                 numer_str = fn_assemble_eq(numer_eq_struct);
                 denom_str = fn_assemble_eq(denom_eq_struct);
                 
@@ -314,18 +314,18 @@ while i <= num_chars
                     detected = [detected '}'];
                 end
                 
-                % Set counter to next character
+                % Set counter to next character that is not in fraction
                 i = find(overlap_idx,1,'last');
                 
             elseif ~isempty(limit_idx)
-                [~,dom_idx] = max(limit_height); % Choose largest limit_char
+                [~,dom_idx] = max(limit_height); % Choose largest to be the limit_char
                 dom_idx = limit_idx(dom_idx);
                 % Get the char
                 limit_char = overlap_chars(dom_idx);
                 limit_y_coord = limit_char.centroid(2);
                 
                 % Store limit character centroid y for super/subscript
-                prev_centroid_y_coord = limit_y_coord;  
+                prev_centroid_y_coord = limit_y_coord;
                 
                 % Get the top and bottom characters by comparing
                 % centroid to the frac bar y coord.
@@ -357,23 +357,26 @@ while i <= num_chars
     i = i+1;
 end
 
+%% Clean up and helper functions
+% If we ended in a superscript or subscript, we need to end.
 if is_super || is_sub
     eq_string = [strtrim(eq_string) '}'];
 end
 
-function tex_char = help_get_char(detected,index, chars,dist_to_next)
-if any(strcmp(detected,control)) || any(strcmp(detected,limit_control))
-    detected = ['\' detected ' '];
-end
-
-% Insert space if needed between letters
-if ~isnan(dist_to_next) && help_is_letter(detected) && help_is_letter(chars(index+1).char)
-    if dist_to_next >= space
-        detected = [detected '\,'];
+    function tex_char = help_get_char(detected,index, chars,dist_to_next)
+    % Helps recognize control characters
+        if any(strcmp(detected,control)) || any(strcmp(detected,limit_control))
+            detected = ['\' detected ' '];
+        end
+        
+        % Insert space if needed between letters
+        if ~isnan(dist_to_next) && help_is_letter(detected) && help_is_letter(chars(index+1).char)
+            if dist_to_next >= space
+                detected = [detected '\,'];
+            end
+        end
+        tex_char = detected;
     end
-end
-tex_char = detected;
-end
 
 
 end
@@ -433,7 +436,7 @@ control = {
 end
 
 function out =  help_is_letter(str)
-    out = length(str)==1 && isstrprop(str,'alpha');
+out = length(str)==1 && isstrprop(str,'alpha');
 end
 
 function new_chars = help_preprocess_chars(chars,boxes)
@@ -452,15 +455,15 @@ while i <= length(chars)
         following_idx = find(boxes(1,:)>start_x_coord & boxes(1,:) < end_x_coord);
         following = chars(following_idx);
         lim_chars_idx =  (strcmp({following.char},'l')) | ...
-                (strcmp({following.char},'.')) | ...
-                (strcmp({following.char},'m'));
+            (strcmp({following.char},'.')) | ...
+            (strcmp({following.char},'m'));
         % Translate back into chars indexing
         lim_chars_idx = following_idx(lim_chars_idx);
         lim_chars(1) = chars(i);
         lim_chars(2:2+size(lim_chars_idx,2)-1) = chars(lim_chars_idx);
         lim_boxes(:,1) = boxes(:,i);
         lim_boxes(:,2:2+size(lim_chars_idx,2)-1) = boxes(:,lim_chars_idx);
-        if length(lim_chars) == 4 % 'l','.','m'            
+        if length(lim_chars) == 4 % 'l','.','m'
             new_ul_x_coord = min(lim_boxes(1,:));
             new_ur_x_coord = max(lim_boxes(1,:) + lim_boxes(3,:));
             new_width = new_ur_x_coord-new_ul_x_coord;

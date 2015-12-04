@@ -1,7 +1,8 @@
 function bw_img = fn_lighting_otsu(img)
-%FN_LIGHTING_COMPENSATION Takes in an rgb image of an equation and
-% returns a binarized version of the image for which uneven lighting has
-% been compensated. Output will not be inverted.
+%FN_LIGHTING_COMPENSATION. ONLY FOR TESTING.
+% Takes in an rgb image of an equation and returns a binarized version of
+% the image for which uneven lighting has been compensated.
+% Output will not be inverted.
 
 % Check if image needs lighting compensation by checking to see what
 % proportion of pixels are in mid grayscale values
