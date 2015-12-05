@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2015.9.25)  4 DEC 2015 18:33
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2015.9.25)  4 DEC 2015 19:15
 entering extended mode
 **Brewer_Sun.tex
 (Brewer_Sun.tex
@@ -385,18 +385,6 @@ Missing character: There is no Ä in font ptmr7t!
 Missing character: There is no ù in font ptmr7t!
 Missing character: There is no ‚ in font ptmr7t!
 Missing character: There is no Ä in font ptmr7t!
-Missing character: There is no ò in font ptmr7t!
-Missing character: There is no ‚ in font ptmr7t!
-Missing character: There is no Ä in font ptmr7t!
-Missing character: There is no ô in font ptmr7t!
-Missing character: There is no ‚ in font ptmr7t!
-Missing character: There is no Ä in font ptmr7t!
-Missing character: There is no ò in font ptmr7t!
-Missing character: There is no ‚ in font ptmr7t!
-Missing character: There is no Ä in font ptmr7t!
-Missing character: There is no ò in font ptmr7t!
-Missing character: There is no ‚ in font ptmr7t!
-Missing character: There is no Ä in font ptmr7t!
 Missing character: There is no ô in font ptmr7t!
 
 [4 <./Images/palette.jpg>] <Images/clean.jpg, id=32, 203.9985pt x 60.444pt>
@@ -458,13 +446,13 @@ Missing character: There is no Ä in font ptmr7t!
 Missing character: There is no ù in font ptmr7t!
  (Brewer_Sun.bbl) [6 <./Images/test_img.jpg>] (Brewer_Sun.aux) ) 
 Here is how much of TeX's memory you used:
- 3979 strings out of 493698
- 62662 string characters out of 3144412
- 132153 words of memory out of 3000000
- 7272 multiletter control sequences out of 15000+200000
+ 3980 strings out of 493698
+ 62676 string characters out of 3144412
+ 132170 words of memory out of 3000000
+ 7273 multiletter control sequences out of 15000+200000
  45938 words of font info for 92 fonts, out of 3000000 for 9000
  1028 hyphenation exceptions out of 8191
- 36i,10n,38p,962b,295s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 36i,10n,38p,962b,293s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Program Fil
 es/MiKTeX 2.9/fonts/enc/dvips/fontname/8r.enc}<C:/Program Files/MiKTeX 2.9/font
 s/type1/public/amsfonts/cm/cmex10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/
@@ -476,7 +464,7 @@ ogram Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Program Fil
 es/MiKTeX 2.9/fonts/type1/urw/times/utmb8a.pfb><C:/Program Files/MiKTeX 2.9/fon
 ts/type1/urw/times/utmbi8a.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/tim
 es/utmr8a.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/times/utmri8a.pfb>
-Output written on Brewer_Sun.pdf (6 pages, 746162 bytes).
+Output written on Brewer_Sun.pdf (6 pages, 746276 bytes).
 PDF statistics:
  77 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)

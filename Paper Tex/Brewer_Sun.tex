@@ -135,14 +135,14 @@ This article describes a system that takes a photograph of a printed equation an
 % 
 % Here we have the typical use of a "T" for an initial drop letter
 % and "HIS" in caps to complete the first word.
-\LaTeX\ is a powerful typesetting system that is extremely useful for technical documents, particularly mathematical equations. However, once rendered, the output cannot be modified without access to the underlying code. Re-coding lengthy equations is time consuming and prone to errors. The ability to take a photograph of an existing equation printed in a textbook, homework assignment or technical article and to produce the editable \LaTeX\ code solves this problem. The challenges to accomplishing this involve cleanly converting the photograph to a binary image, correcting skew from the horizontal, correctly segmenting each individual character, matching the characters to a database of characters, and finally generating the correct \LaTeX\ representation of the equation.
+\LaTeX\ is a powerful typesetting system that is extremely useful for technical documents, particularly mathematical equations. However, once rendered, the output cannot be modified without access to the underlying code. Re-coding lengthy equations is time consuming and prone to errors. The ability to take a photograph of an existing equation printed in a textbook, homework assignment or technical article and to produce editable \LaTeX\ code solves this problem. The challenges to accomplishing this involve cleanly converting the photograph to a binary image, correcting skew from the horizontal, correctly segmenting each individual character, matching the characters to a database of characters, and finally generating the correct \LaTeX\ representation of the equation.
 
 \section{Related Work}
 The advent of smartphones has prompted the rise of applications that automatically recognize and solve mathematical equations using a built in camera; one example is the popular PhotoMath application\cite{PhotoMath:photomath}. However, less work has gone into translating equations into \LaTeX\ code.\\
-The problem of character recognition has also seen numerous techniques that have had varying levels of success.This includes a basic template matching algorithm using morphological operators with additional character properties\cite{Naqvi:article_typical}. Some have used morphological operators with only portions of the character to reduce the operator dataset and detect characters based on certain combinations of matched operators\cite{Pradhan:article_typical}. Others have used various region-based invariant moments such as the Hu, Zernike, and Krawtchouk moments\cite{Potocnik:article_typical} and circular topology of individual characters in an effort to have scale, translation, and rotation robustness \cite{Torres-Mendez:article_typical}. This project combines the use of the Hu moments with circular topology.
+The problem of character recognition has also seen numerous techniques that have had varying levels of success.This includes a basic template matching algorithm using morphological operators with additional character properties\cite{Naqvi:article_typical}. Some have used morphological operators with only portions of characters to reduce the operator dataset and detect characters based on certain combinations of matched operators\cite{Pradhan:article_typical}. Others have used various region-based invariant moments such as the Hu, Zernike, and Krawtchouk moments\cite{Potocnik:article_typical} and circular topology of individual characters in an effort to have scale, translation, and rotation robustness \cite{Torres-Mendez:article_typical}. This project combines the use of the Hu moments with circular topology.
 
 \section{Process Flow}
-The following processing pipeline converts an image of an equation to \LaTeX\ code. First, the image is captured; the target use-case does this through a smartphone camera. Next, the image is binarized with a white background and black characters. Then, skew is corrected so the equation in the image is horizontal. Afterwards, segmentation algorithms find each contiguous character in the equation, extract a feature vector, and identify the character using nearest neighbor classification. Finally, an algorithm assembles the recognized characters into \LaTeX\ code. The current implementation of the process outputs the resultant code as a .tex file to be used as needed.
+The following processing pipeline converts an image of an equation to \LaTeX\ code. First, the image is captured; the target use-case does this through a smartphone camera. Next, the image is binarized with a white background and black characters. Then, skew is corrected so the equation in the image is horizontal. Afterwards, segmentation algorithms find each contiguous character in the equation, extract a feature vector for each, and identify the characters using nearest neighbor classification. Finally, an algorithm assembles the recognized characters into \LaTeX\ code. The current implementation of the process outputs the resultant code as a .tex file to be used as needed.
 The following sections describe each part of the pipeline in more detail.
 
 
@@ -150,17 +150,17 @@ The following sections describe each part of the pipeline in more detail.
 The input RGB image is first converted into a binary image for processing. We found that treating scanned images differently from smartphone photographs gave the best results. In order to differentiate between the two image types, an image is first converted to grayscale. Then, we look at the proportion of pixels that are mid-gray, defined as having an 8-bit intensity value between 15 and 240, inclusive. If this proportion is less than 0.1, we classify the image as a scanned or screenshot image; otherwise, we classify the image as a photograph. The following two sections describe the binarization method carried out for each class of image.
 
 \subsubsection{Smartphone Photographs}
-Photographs taken by a smartphone invariably contain uneven lighting and page imperfections. We perform adaptive thresholding with noise removal to compensate. First, the image is blurred with a Gaussian filter to smooth edges and remove high frequency noise, if the image is high-resolution. This pre-filtering is very beneficial for character recognition in high-resolution images but actually has a detrimental effect for low-resolution images due to the small number of pixels in the image. We empirically determined that an image with more than $2000\times1000$ pixels is well classified as high-resolution for use with a $10\times10$ Gaussian filter with standard deviation of $3$.
+Photographs taken by a smartphone invariably contain uneven lighting and page imperfections. We perform adaptive thresholding with noise removal to compensate. First, if the image is high-resolution, the image is blurred with a Gaussian filter to smooth edges and remove high frequency noise. This pre-filtering is very beneficial for character recognition in high-resolution images but actually has a detrimental effect for low-resolution images due to the small number of total pixels. We empirically determined that an image with more than $2000\times1000$ pixels is well classified as high-resolution for use with a $10\times10$ Gaussian filter with standard deviation of $3$.
 
 We use adaptive thresholding for the binarization in order to compensate for uneven lighting. The window size is set at $1/60^{\text{th}}$ of the smaller dimension of the image. This adaptive window size was chosen in order to adequately handle uneven lighting while still being small enough to preserve the integrity of most of the characters. To eliminate the overhead of performing Otsu's method on each window, we leverage the fact that each image consists only of black text or white background. Thus, we use the window mean minus 10 as the threshold, with the offset of 10 to eliminate the effect of noise in the background. The window means are calculated quickly by convolving with an averaging filter; subtracting the offset from the output creates our threshold matrix. Then, we take the difference of the image and the thresholds, allowing us to produce the binary image by thresholding this difference matrix with $0$.
 
-After producing the binary image, we invert it so that the foreground is now the text and noise. We remove the noise in the background by performing a morphological opening operation. Afterwards, we perform a closing operation to close gaps in character edges. Finally, since the chosen window size may have created gaps in the middle of some characters with thick strokes, we perform small hole filling. Afterwards, we return the output image to the original polarity in order to obtain the final binarized output.
+After producing the binary image, we invert it so that the foreground is now the text and noise. We remove the noise in the background by performing a morphological opening operation. Afterwards, we perform a closing operation to close gaps in character edges. Finally, since the chosen window size may have created gaps in the middle of some characters with thick strokes, we perform small hole filling. We then return the output image to the original polarity in order to obtain the final binarized output.
 
 \subsubsection{Scans and PDF Screenshots}
- Scans and PDF screenshots should not need to have lighting correction performed. To prevent excessive runtime and unnecessary distortion, we perform Otsu's method for these images.
+ Scans and PDF screenshots should not  require lighting correction. To prevent excessive runtime and unnecessary distortion, we perform Otsu's method for these images.
  
- \subsection{Skew Correction}
- We then correct the binarized image for rotations. To compute the dominant orientation, we take the Hough transform. Fortunately, most equations have multiple horizontal lines, such as fraction bars, equal signs, and negative signs, as seen below. This means that the dominant orientation is usually given by the correct, horizontal orientation. In order to guard against large magnitude peaks given by long diagonal lines, such as the diagonal division bar in Figure \ref{fig:1}, we consider the top four magnitude Hough peaks and choose the mode of the orientations. 
+ \subsection{Skew Correction} \label{skew_section}
+ We then correct the binarized image for rotations. To compute the dominant orientation, we take the Hough transform. Fortunately, most equations have multiple horizontal lines, such as fraction bars, equal signs, and negative signs, as seen in Figure \ref{fig:2}. This means that the dominant orientation is usually given by the correct, horizontal orientation. In order to guard against large magnitude peaks given by long diagonal lines, such as the diagonal division bar in Figure \ref{fig:1}, we consider the top four magnitude Hough peaks and choose the mode of the orientations. 
  
  \begin{figure}[!t]
     \centering
@@ -178,7 +178,7 @@ After producing the binary image, we invert it so that the foreground is now the
   \label{fig:2}
 \end{figure}
  
- For visualization, in Figure \ref{fig:3}, we want $\theta$, but the Hough transform gives us $\rho$, but we easily correct for this by subtracting $90^\circ$. After derotating the image we perform edge softening if the detected rotation angle is large. Significant rotations introduce quantization errors along straight lines, manifesting in jagged edges that are detrimental to character recognition. Currently, we soften the edges using an opening operation. The output of the Skew Correction algorithm is fed into the Segmentation algorithm of the Character Matching portion of the pipeline, described in the next section.
+ For visualization, in Figure \ref{fig:3}, we want $\theta$, but the Hough transform gives us $\rho$. However, we easily correct for this by subtracting $90^\circ$. After derotating the image we perform edge softening if the detected rotation angle is large. Significant rotations introduce quantization errors along straight lines, manifesting in jagged edges that are detrimental to character recognition. Currently, we soften the edges using an opening operation. The output of the Skew Correction algorithm is fed into the Segmentation algorithm of the Character Matching portion of the pipeline, described in the next section.
  
  
  
@@ -208,12 +208,12 @@ Thus, if a character's convex hull is fully contained within another convex hull
     \caption{Segmented Square Root}
     \label{fig:seg_eq}
 \end{figure}
-Finally, we extract each bounding box region and keep the largest single character within each region to only extract the character of interest in cases like the square root where other characters are contained in its bounding box.
+Finally, we extract each bounding box region and keep the largest single character within each region to extract only the character of interest in cases like the square root where other characters are contained in its bounding box.
 
 \subsection{Character Identifier}
 Afterwards, we build an identification profile for each segmented character. The identification profile is a twenty-two element vector used to match the segmented character with its equivalent in the template database.
 We chose these characteristics to be invariant to translation, scaling, and rotation. Specifically, we integrated the usage of the following features that have been used separately in literature:  the normalized central moment of inertia, circular topology\cite{Torres-Mendez:article_typical}, and Hu Invariant Moments\cite{Potocnik:article_typical}.
-The first element in the vector is the normalized central moment of inertia\cite{Torres-Mendez:article_typical}. The central moment of inertia is translation- and rotation-invariant; normalization renders it scale-invariant. The following equation calculates this:
+The first element in the vector is the normalized central moment of inertia. The central moment of inertia is translation- and rotation-invariant; normalization renders it scale-invariant\cite{Torres-Mendez:article_typical}. The following equation calculates the moment:
 \begin{equation} \label{eq:central_moment_of_inertia}
 I_N = \frac{\sum\limits_{i=0}^N((x_i-c_x)^2 + (y_i - c_y)^2)}{N^2}
 \end{equation}
@@ -270,24 +270,24 @@ For feasibility, we defined a character palette that contains the possible chara
 Then, we classified each character found by the segmentation algorithm through a nearest neighbor classifier using Manhattan distance, which produced the best results compared to other types of distances tested, and we output the best match as the detected character. This along with the centroid and bounding box with respect to the original equation are passed to the equation assembly function.
 
 \subsection{Equation Assembly}
-We assemble each equation sequentially from left to right using each recognized character's bounding box. Notably, as we process each character, we keep track of a "previous" centroid to detect the presence of superscripts and subscripts. This is always the centroid of the previous matched character. For example, if the previous character were a  part of a fraction, we need to consider the centroid of the fraction bar instead. The basic flow of the algorithm is as follows:
+We assemble each equation sequentially from left to right using each recognized character's bounding box. Notably, as we process each character, we keep track of a "previous" centroid to detect the presence of superscripts and subscripts. This is \textbf{not} always the centroid of the previous matched character. For example, if the previous character were a  part of a fraction, we need to consider the centroid of the fraction bar instead. The basic flow of the algorithm is as follows:
 
 If the current character's bounding box does not overlap with any subsequent bounding boxes, we add the character to the equation directly using the following rules:
 \begin{enumerate}
     \item If the lower-left corner of the bounding box is above the height of the “previous” centroid, either a superscript or the end of a subscript has occurred. We keep track of a subscript flag to differentiate the two.
     \item If the upper-left corner of the bounding box is below the height of the “previous” centroid, we carry out the opposite operation from above.
-    \item Otherwise, if the character is a \LaTeX\ control sequence, $\backslash$ is pre-appended to the character and a space is post-appended. Then the aggregate is added to the equation.
+    \item Otherwise, if the character is a \LaTeX\ control sequence, '$\backslash$' is pre-appended to the character and a space is post-appended. Then the aggregate is added to the equation.
     \item Otherwise, the character is added directly with no modifications.
     
 \end{enumerate}
 
 If the current character overlaps with subsequent bounding boxes, we check for specific cases:
 \begin{enumerate}    
-    \item If the character is '-' and only overlaps with a singe other '-', we append ‘=’ to the equation and skip the overlapping '-'.
-    \item If the character is a square-root, we select all of the subsequent overlapping characters and recursively assemble a sub-equation. Then, we append the appropriate \LaTeX\ command to the total equation.
+    \item If the character is '-' and only overlaps with a singe other '-', we append \text{'='} to the equation and skip the overlapping '-'.
+    \item If the character is a square-root, we select all of the subsequent overlapping characters and recursively assemble a sub-equation. Then, we append the appropriate \LaTeX\ sequence to the total equation.
     \item If the character is '-' and does not only overlap with a single other '-':
     \begin{enumerate}
-	    \item If the width of the ‘-‘ is a large portion of the width of the union of the overlapping bounding boxes, we recognize the overlapping region as a fraction. We divide the characters into  denominator and numerator sets. Then we recursively assemble these two sets into sub-equations. Finally, the fraction is assembled into the proper \LaTeX\ format and appended to the total equation.
+	    \item If the width of the '-' is a large portion of the width of the union of the overlapping bounding boxes, we recognize the overlapping region as a fraction. We divide the characters into  denominator and numerator sets. Then we recursively assemble these two sets into sub-equations. Finally, the fraction is assembled into the proper \LaTeX\ format and appended to the total equation.
 	    \item Otherwise, it is a negative sign, and we continue to the next case.
 	\end{enumerate}
     \item We look for a limit-enabled control sequence (summation, integration, and product), and then recursively assemble the equations of the upper and bottom limits as appropriate.
@@ -296,7 +296,7 @@ If the current character overlaps with subsequent bounding boxes, we check for s
 This logic is limited in the number of \LaTeX\ constructions supported. For example, we do not support all of the numerous \LaTeX\ control sequences. Also, variable modifiers such as the dot or bar notation will not be correctly assembled.
 
 \section{Results}
-The binarization method yielded no problems on our test cases. Compared to performing Otsu's Method Adaptive Thresholding, our heuristic implementation runs in about half the time. The results are shown in Table \ref{tab:binarize_results}.
+The binarization method yielded no problems on our test cases. Furthermore, compared to performing Adaptive Thresholding with Otsu's Method, our heuristic implementation runs in about half the time. The results are shown in Table \ref{tab:binarize_results}.
 \begin{center}
 \begin{minipage}{\columnwidth}
     \captionof{table}{Time for Binarization on Demo\_equation.jpg} \label{tab:binarize_results} 
@@ -320,7 +320,7 @@ The binarization method yielded no problems on our test cases. Compared to perfo
     \label{fig:clean}
 \end{figure}
 
-We also performed derotation tests on our fifteen "clean" equations. This "clean" set was obtained by exporting direct \LaTeX\ compilations as .jpg files. See Figure \ref{fig:clean} for an example. We manually rotated each "clean" equation by an angle and ran the derotation algorithm on the resulting image. We then defined the error to be the absolute value of the difference between the detected angle and the rotated angle. The results are graphed in Figure \ref{fig:deskew_graph}. Our algorithm resulted in errors below 2 degrees in magnitude for most of our test equations. Equation 3 is the outlier. This equation was shown above in Figure \ref{fig:1}. Despite the guards described in the Derotation section, our algorithm still registers the diagonal division bar as the dominant orientation for most rotation angles.
+We also performed derotation tests on our fifteen "clean" equations. This "clean" set was obtained by exporting direct \LaTeX\ compilations as .jpg files. See Figure \ref{fig:clean} for an example. We manually rotated each "clean" equation by an angle and ran the derotation algorithm on the resulting image. We then defined the error to be the absolute value of the difference between the detected angle and the rotated angle. The results are graphed in Figure \ref{fig:deskew_graph}. Our algorithm resulted in errors below 2 degrees in magnitude for most of our test equations. Equation 3 is the outlier. This equation was shown above in Figure \ref{fig:1}. Despite the guards described in Section \ref{skew_section}, our algorithm still registers the diagonal division bar as the dominant orientation for most rotation angles.
 
 
 
@@ -402,7 +402,8 @@ Finally, our algorithm is rather slow. We made some attempts to decrease our alg
 The authors would like to thank Professor Gordon Wetzstein for making this project possible and Kushagr Gupta for invaluable consulting.
 
 \appendix[]
-The project workload was divided between the group members:\\
+All test equation images can be found in the 'Equations' directory of the attached source code archive.\\
+The project workload was divided between the group members as follows:\\
 \textbf{Jim Brewer}: Data Acquisition, Character Segmentation, Character Identification, Character Matching, Testing.\\
 \textbf{James Sun}: Data Acquisition, Lighting Compensation, Image Derotation, Equation Assembly, Testing.
 
