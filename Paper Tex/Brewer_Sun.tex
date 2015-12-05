@@ -334,6 +334,7 @@ We also performed derotation tests on our fifteen "clean" equations. This "clean
 
 We also tested the matching algorithm in several ways. First, the database characters were rescaled before performing character matching. Over a scale range of $0.5$ to $1.25$ the overall correct percentage was $95.3\%$ as shown in Table \ref{tab:scaling_results}.
 
+\begin{center}
 \begin{minipage}{\columnwidth}
     \captionof{table}{Robustness to Scaling} \label{tab:scaling_results} 
     \begin{tabularx}{\columnwidth}{|X|X|X|}
@@ -351,6 +352,7 @@ We also tested the matching algorithm in several ways. First, the database chara
         \hline
     \end{tabularx}    
 \end{minipage}
+\end{center}
 
 Next, we ran the full pipeline on the fifteen equations in the “clean” set. We observed a matching performance of 147/157 characters for a rate of 93.6\%. The missed characters are partly from false positives and partly from an equation that was incorrectly derotated due to the presence of a $\Lambda$ which acted like the division bar in the test equation in Figure \ref{fig:1}.
 We also tested the overall system for robustness to rotation. The fifteen clean equations above were rotated from $-25^\circ$ degrees to $+15^\circ$ in increments of $5^\circ$, and the entire process was run on each rotated equation.
