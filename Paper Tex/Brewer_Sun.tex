@@ -88,7 +88,7 @@
 % not capitalized unless they are the first or last word of the title.
 % Linebreaks \\ can be used within to get better formatting as desired.
 % Do not put math or special symbols in the title.
-\title{\LaTeX Generation from Printed Equations}
+\title{\LaTeX\ Generation from Printed Equations}
 %
 %
 % author names and IEEE memberships
@@ -114,7 +114,7 @@
 % As a general rule, do not put math, special symbols or citations
 % in the abstract or keywords.
 \begin{abstract}
-This article describes a system that takes a photograph of a printed equation and produces a \LaTeX code representation. The process uses adaptive thresholding with mean filtering, morphological edge smoothing, and the Hough transform for image binarization and skew correction. The project uses Hu invariant moments and circular topology to match characters against a database of characters. The algorithm then assembles the appropriate \LaTeX code from the detected characters. This system is able to detect 93.6\% of characters in “ideal” images and 86.2\% of characters in real-world photographs when combining two different skew methods (74\%-79\%).
+This article describes a system that takes a photograph of a printed equation and produces a \LaTeX\ code representation. The process uses adaptive thresholding with mean filtering, morphological edge smoothing, and the Hough transform for image binarization and skew correction. The project uses Hu invariant moments and circular topology to match characters against a database of characters. The algorithm then assembles the appropriate \LaTeX\ code from the detected characters. This system is able to detect 93.6\% of characters in “ideal” images and 86.2\% of characters in real-world photographs when combining two different skew methods (74\%-79\%).
 \end{abstract}
 
 
@@ -135,14 +135,14 @@ This article describes a system that takes a photograph of a printed equation an
 % 
 % Here we have the typical use of a "T" for an initial drop letter
 % and "HIS" in caps to complete the first word.
-\LaTeX is a powerful typesetting system that is extremely useful for technical documents, particularly mathematical equations. However, once rendered, the output cannot be modified without access to the underlying code. Re-coding lengthy equations is time consuming and prone to errors. The ability to take a photograph of an existing equation printed in a textbook, homework assignment or technical article and to produce the editable \LaTeX code solves this problem. The challenges to accomplishing this involve cleanly converting the photograph to a binary image, correcting skew from the horizontal, correctly segmenting each individual character, matching the characters to a database of characters, and finally generating the correct \LaTeX representation of the equation.
+\LaTeX\ is a powerful typesetting system that is extremely useful for technical documents, particularly mathematical equations. However, once rendered, the output cannot be modified without access to the underlying code. Re-coding lengthy equations is time consuming and prone to errors. The ability to take a photograph of an existing equation printed in a textbook, homework assignment or technical article and to produce the editable \LaTeX\ code solves this problem. The challenges to accomplishing this involve cleanly converting the photograph to a binary image, correcting skew from the horizontal, correctly segmenting each individual character, matching the characters to a database of characters, and finally generating the correct \LaTeX\ representation of the equation.
 
 \section{Related Work}
-The advent of smartphones has prompted the rise of applications that automatically recognize and solve mathematical equations using a built in camera; one example is the popular PhotoMath application\cite{PhotoMath:photomath}. However, less work has gone into translating equations into \LaTeX code.\\
+The advent of smartphones has prompted the rise of applications that automatically recognize and solve mathematical equations using a built in camera; one example is the popular PhotoMath application\cite{PhotoMath:photomath}. However, less work has gone into translating equations into \LaTeX\ code.\\
 The problem of character recognition has also seen numerous techniques that have had varying levels of success.This includes a basic template matching algorithm using morphological operators with additional character properties\cite{Naqvi:article_typical}. Some have used morphological operators with only portions of the character to reduce the operator dataset and detect characters based on certain combinations of matched operators\cite{Pradhan:article_typical}. Others have used various region-based invariant moments such as the Hu, Zernike, and Krawtchouk moments\cite{Potocnik:article_typical} and circular topology of individual characters in an effort to have scale, translation, and rotation robustness \cite{Torres-Mendez:article_typical}. This project combines the use of the Hu moments with circular topology.
 
 \section{Process Flow}
-The following processing pipeline converts an image of an equation to \LaTeX code. First, the image is captured; the target use-case does this through a smartphone camera. Next, the image is binarized with a white background and black characters. Then, skew is corrected so the equation in the image is horizontal. Afterwards, segmentation algorithms find each contiguous character in the equation, extract a feature vector, and identify the character using nearest neighbor classification. Finally, an algorithm assembles the recognized characters into \LaTeX code. The current implementation of the process outputs the resultant code as a .tex file to be used as needed.
+The following processing pipeline converts an image of an equation to \LaTeX\ code. First, the image is captured; the target use-case does this through a smartphone camera. Next, the image is binarized with a white background and black characters. Then, skew is corrected so the equation in the image is horizontal. Afterwards, segmentation algorithms find each contiguous character in the equation, extract a feature vector, and identify the character using nearest neighbor classification. Finally, an algorithm assembles the recognized characters into \LaTeX\ code. The current implementation of the process outputs the resultant code as a .tex file to be used as needed.
 The following sections describe each part of the pipeline in more detail.
 
 
@@ -257,7 +257,7 @@ Finally, we calculate the Hu Invariant Moments\cite{Muralidharan:article_typical
     \end{equation}
 \subsection{Matching}
 
-For feasibility, we defined a character palette that contains the possible characters that can be identified, shown in Figure \ref{fig:palette}. We created a template database by pre-calculating the character identifiers for every character in the palette and associating with the appropriate \LaTeX code. 
+For feasibility, we defined a character palette that contains the possible characters that can be identified, shown in Figure \ref{fig:palette}. We created a template database by pre-calculating the character identifiers for every character in the palette and associating with the appropriate \LaTeX\ code. 
 
 
 \begin{figure}[!t]
@@ -276,7 +276,7 @@ If the current character's bounding box does not overlap with any subsequent bou
 \begin{enumerate}
     \item If the lower-left corner of the bounding box is above the height of the “previous” centroid, either a superscript or the end of a subscript has occurred. We keep track of a subscript flag to differentiate the two.
     \item If the upper-left corner of the bounding box is below the height of the “previous” centroid, we carry out the opposite operation from above.
-    \item Otherwise, if the character is a \LaTeX control sequence, $\backslash$ is pre-appended to the character and a space is post-appended. Then the aggregate is added to the equation.
+    \item Otherwise, if the character is a \LaTeX\ control sequence, $\backslash$ is pre-appended to the character and a space is post-appended. Then the aggregate is added to the equation.
     \item Otherwise, the character is added directly with no modifications.
     
 \end{enumerate}
@@ -284,16 +284,16 @@ If the current character's bounding box does not overlap with any subsequent bou
 If the current character overlaps with subsequent bounding boxes, we check for specific cases:
 \begin{enumerate}    
     \item If the character is '-' and only overlaps with a singe other '-', we append ‘=’ to the equation and skip the overlapping '-'.
-    \item If the character is a square-root, we select all of the subsequent overlapping characters and recursively assemble a sub-equation. Then, we append the appropriate \LaTeX command to the total equation.
+    \item If the character is a square-root, we select all of the subsequent overlapping characters and recursively assemble a sub-equation. Then, we append the appropriate \LaTeX\ command to the total equation.
     \item If the character is '-' and does not only overlap with a single other '-':
     \begin{enumerate}
-	    \item If the width of the ‘-‘ is a large portion of the width of the union of the overlapping bounding boxes, we recognize the overlapping region as a fraction. We divide the characters into  denominator and numerator sets. Then we recursively assemble these two sets into sub-equations. Finally, the fraction is assembled into the proper \LaTeX format and appended to the total equation.
+	    \item If the width of the ‘-‘ is a large portion of the width of the union of the overlapping bounding boxes, we recognize the overlapping region as a fraction. We divide the characters into  denominator and numerator sets. Then we recursively assemble these two sets into sub-equations. Finally, the fraction is assembled into the proper \LaTeX\ format and appended to the total equation.
 	    \item Otherwise, it is a negative sign, and we continue to the next case.
 	\end{enumerate}
     \item We look for a limit-enabled control sequence (summation, integration, and product), and then recursively assemble the equations of the upper and bottom limits as appropriate.
 \end{enumerate}
 
-This logic is limited in the number of \LaTeX constructions supported. For example, we do not support all of the numerous \LaTeX control sequences. Also, variable modifiers such as the dot or bar notation will not be correctly assembled.
+This logic is limited in the number of \LaTeX\ constructions supported. For example, we do not support all of the numerous \LaTeX\ control sequences. Also, variable modifiers such as the dot or bar notation will not be correctly assembled.
 
 \section{Results}
 The binarization method yielded no problems on our test cases. Compared to performing Otsu's Method Adaptive Thresholding, our heuristic implementation runs in about half the time. The results are shown in Table \ref{tab:binarize_results}.
@@ -320,7 +320,7 @@ The binarization method yielded no problems on our test cases. Compared to perfo
     \label{fig:clean}
 \end{figure}
 
-We also performed derotation tests on our fifteen "clean" equations. This "clean" set was obtained by exporting direct \LaTeX compilations as .jpg files. See Figure \ref{fig:clean} for an example. We manually rotated each "clean" equation by an angle and ran the derotation algorithm on the resulting image. We then defined the error to be the absolute value of the difference between the detected angle and the rotated angle. The results are graphed in Figure \ref{fig:deskew_graph}. Our algorithm resulted in errors below 2 degrees in magnitude for most of our test equations. Equation 3 is the outlier. This equation was shown above in Figure \ref{fig:1}. Despite the guards described in the Derotation section, our algorithm still registers the diagonal division bar as the dominant orientation for most rotation angles.
+We also performed derotation tests on our fifteen "clean" equations. This "clean" set was obtained by exporting direct \LaTeX\ compilations as .jpg files. See Figure \ref{fig:clean} for an example. We manually rotated each "clean" equation by an angle and ran the derotation algorithm on the resulting image. We then defined the error to be the absolute value of the difference between the detected angle and the rotated angle. The results are graphed in Figure \ref{fig:deskew_graph}. Our algorithm resulted in errors below 2 degrees in magnitude for most of our test equations. Equation 3 is the outlier. This equation was shown above in Figure \ref{fig:1}. Despite the guards described in the Derotation section, our algorithm still registers the diagonal division bar as the dominant orientation for most rotation angles.
 
 
 
@@ -378,7 +378,7 @@ Finally, the algorithm was tested on ten photographs of equations under uneven l
 \section{Limitations}
 The deskewing algorithm presented the most limitations. Most of these limitations manifested only in short equations where diagonal lines in characters were dominant enough to outweigh the horizontal lines in the Hough space. However, in practice, this could be overcome by underlining each equation by hand. In fact, this would be a very reasonable augmentation for extending this project to handwritten equations.  
 
-Also, our current character palette for character matching is limited in comparison to the huge variety of \LaTeX characters available. Our process is modular enough that adding additional characters would be simple; we would just add the character to the palette with the appropriate label and the algorithm would proceed as usual. However, we would need to perform additional validations to ensure that no aliasing effects would be introduced. In the same vein, our equation assembly algorithm is limited to recognizing certain patterns. However, in this case, additional \LaTeX equation patterns should be easy to implement.
+Also, our current character palette for character matching is limited in comparison to the huge variety of \LaTeX\ characters available. Our process is modular enough that adding additional characters would be simple; we would just add the character to the palette with the appropriate label and the algorithm would proceed as usual. However, we would need to perform additional validations to ensure that no aliasing effects would be introduced. In the same vein, our equation assembly algorithm is limited to recognizing certain patterns. However, in this case, additional \LaTeX\ equation patterns should be easy to implement.
 However, one major limitation of the assembler is fractional exponents. As seen in Figure \ref{fig:clean}, the fraction in the exponent is very large. Our current algorithm correctly detects the exponent, and even the nested exponent, but it fails to detect that the following “dx” is outside of the exponent. Therefore, we have imposed the constraint that all fractions within exponents must occur at the end of the exponent, and the algorithm will automatically end any exponent after a fraction is appended. Further work must be done to remove this limitation.
 
 \section{Further Work}
